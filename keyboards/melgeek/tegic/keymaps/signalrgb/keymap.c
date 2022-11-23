@@ -51,3 +51,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	    _______,  _______,  _______,                      _______,                               _______,  _______,  _______,  _______,  _______,  _______
 	)
 };
+
+
+//开关切换
+// void rgb_matrix_indicators_user(void) {
+//    if (IS_HOST_LED_ON(USB_LED_CAPS_LOCK)) {
+//       rgb_matrix_set_color(47, 200, 20, 20); // LED Index, R, G, B
+//    }
+
+// //    if (IS_LAYER_ON(1)) { // 如果切换到了层1
+// //      rgb_matrix_set_color(86, 200, 20, 20);
+// //    }
+// }

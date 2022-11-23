@@ -221,7 +221,9 @@ extern layer_state_t layer_state;
 #endif
 
 #ifdef OPENRGB_ENABLE
+#    ifndef VIA_ENABLE
 #    include "openrgb.h"
+#    endif
 #endif
 
 #ifdef WPM_ENABLE

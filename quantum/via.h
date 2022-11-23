@@ -60,6 +60,10 @@
 // so VIA Configurator can detect compatible firmware.
 #define VIA_PROTOCOL_VERSION 0x000A
 
+#define OPENRGB_PROTOCOL_VERSION 0xC //add openRGB Version
+
+#define RAW_EPSIZE 64 //set openRGB raw epsize needed
+
 enum via_command_id {
     id_get_protocol_version                 = 0x01, // always 0x01
     id_get_keyboard_value                   = 0x02,
@@ -93,6 +97,24 @@ enum via_command_id {
     id_unhandled                            = 0xFF,
 };
 
+enum openrgb_command_id {
+    OPENRGB_GET_PROTOCOL_VERSION = 1, //id_get_protocol_version
+    OPENRGB_GET_QMK_VERSION, //id_get_keyboard_value
+    OPENRGB_GET_DEVICE_INFO, //id_set_keyboard_value
+    OPENRGB_GET_MODE_INFO, //id_dynamic_keymap_get_keycode
+    OPENRGB_GET_LED_INFO, //id_dynamic_keymap_set_keycode
+    OPENRGB_GET_ENABLED_MODES, //id_dynamic_keymap_reset
+    OPENRGB_SET_MODE, //id_lighting_set_value
+    OPENRGB_DIRECT_MODE_SET_SINGLE_LED, //id_lighting_get_value
+    OPENRGB_DIRECT_MODE_SET_LEDS, //id_lighting_save
+};
+
+enum openrgb_responses {
+    OPENRGB_FAILURE        = 25,
+    OPENRGB_SUCCESS        = 50,
+    OPENRGB_END_OF_MESSAGE = 100,
+};
+
 enum signalrgb_responses {
     PROTOCOL_VERSION_BYTE_1 = 1,
     PROTOCOL_VERSION_BYTE_2 = 0,
@@ -103,7 +125,7 @@ enum signalrgb_responses {
     DEVICE_UNIQUE_IDENTIFIER_BYTE_1 = 0,
     DEVICE_UNIQUE_IDENTIFIER_BYTE_2 = 0,
     DEVICE_UNIQUE_IDENTIFIER_BYTE_3 = 0,
-    FIRMWARE_TYPE_BYTE = 2, 
+    FIRMWARE_TYPE_BYTE = 2,
     DEVICE_ERROR_LEDS = 254,
 };
 
@@ -192,6 +214,20 @@ void via_init(void);
 uint32_t via_get_layout_options(void);
 void     via_set_layout_options(uint32_t value);
 void     via_set_layout_options_kb(uint32_t value);
+
+//Used to handle OpenRGB Compatibility
+extern RGB g_openrgb_direct_mode_colors[DRIVER_LED_TOTAL];
+
+void openrgb_get_protocol_version(void);
+void openrgb_get_qmk_version(void);
+void openrgb_get_device_info(void);
+void openrgb_get_mode_info(void);
+void openrgb_get_led_info(uint8_t *data);
+void openrgb_get_enabled_modes(void);
+
+void openrgb_set_mode(uint8_t *data);
+void openrgb_direct_mode_set_single_led(uint8_t *data);
+void openrgb_direct_mode_set_leds(uint8_t *data);
 
 //Used to handle SignalRGB Compatibility
 
