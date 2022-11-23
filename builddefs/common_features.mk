@@ -222,10 +222,16 @@ else
         # True EEPROM on STM32L0xx, L1xx
         OPT_DEFS += -DEEPROM_DRIVER -DEEPROM_STM32_L0_L1
         SRC += eeprom_driver.c eeprom_stm32_L0_L1.c
+      else ifneq ($(filter $(MCU_SERIES),STM32L4xx),)
+        # Emulated EEPROM
+        OPT_DEFS += -DEEPROM_DRIVER -DEEPROM_STM32_FLASH_EMULATED
+        COMMON_VPATH += $(PLATFORM_PATH)/$(PLATFORM_KEY)/$(DRIVER_DIR)/flash
+        COMMON_VPATH += $(DRIVER_PATH)/flash
+        SRC += eeprom_driver.c eeprom_stm32_l4.c flash_stm32.c
       else ifneq ($(filter $(MCU_SERIES),RP2040),)
-		# Wear-leveling EEPROM implementation, backed by RP2040 flash
-		OPT_DEFS += -DEEPROM_DRIVER -DEEPROM_WEAR_LEVELING
-		SRC += eeprom_driver.c eeprom_wear_leveling.c
+	# Wear-leveling EEPROM implementation, backed by RP2040 flash
+	OPT_DEFS += -DEEPROM_DRIVER -DEEPROM_WEAR_LEVELING
+	SRC += eeprom_driver.c eeprom_wear_leveling.c
         WEAR_LEVELING_DRIVER = rp2040_flash
       else ifneq ($(filter $(MCU_SERIES),KL2x K20x),)
         # Teensy EEPROM implementations
@@ -606,12 +612,29 @@ ifeq ($(strip $(LED_TABLES)), yes)
     SRC += $(QUANTUM_DIR)/led_tables.c
 endif
 
+ifeq ($(strip $(SIGNALRGB_SUPPORT_ENABLE)), yes)
+    ifneq ($(strip $(VIA_ENABLE)), yes)
+    RAW_ENABLE := yes
+    SRC += $(QUANTUM_DIR)/signalrgb.c
+    OPT_DEFS += -DSIGNALRGB_SUPPORT_ENABLE
+    endif
+endif
+
 ifeq ($(strip $(VIA_ENABLE)), yes)
     DYNAMIC_KEYMAP_ENABLE := yes
     RAW_ENABLE := yes
     BOOTMAGIC_ENABLE := yes
     SRC += $(QUANTUM_DIR)/via.c
     OPT_DEFS += -DVIA_ENABLE
+endif
+
+ifeq ($(strip $(OPENRGB_ENABLE)), yes)
+     ifeq ($(strip $(VIA_ENABLE)), yes)
+        $(error OPENRGB_ENABLE and VIA_ENABLE cannot currently be enabled simultaneously)
+    endif
+    RAW_ENABLE := yes
+    SRC += $(QUANTUM_DIR)/openrgb.c
+    OPT_DEFS += -DOPENRGB_ENABLE
 endif
 
 VALID_MAGIC_TYPES := yes
@@ -773,7 +796,9 @@ endif
 
 ifeq ($(strip $(UNICODE_COMMON)), yes)
     OPT_DEFS += -DUNICODE_COMMON_ENABLE
+    COMMON_VPATH += $(QUANTUM_DIR)/unicode
     SRC += $(QUANTUM_DIR)/process_keycode/process_unicode_common.c \
+	   $(QUANTUM_DIR)/unicode/unicode.c \
            $(QUANTUM_DIR)/utf8.c
 endif
 

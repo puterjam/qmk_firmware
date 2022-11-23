@@ -210,8 +210,18 @@ extern layer_state_t layer_state;
 #    include "joystick.h"
 #endif
 
+#ifdef SIGNALRGB_SUPPORT_ENABLE
+#    ifndef VIA_ENABLE
+#    include "signalrgb.h"
+#    endif
+#endif
+
 #ifdef VIA_ENABLE
 #    include "via.h"
+#endif
+
+#ifdef OPENRGB_ENABLE
+#    include "openrgb.h"
 #endif
 
 #ifdef WPM_ENABLE
