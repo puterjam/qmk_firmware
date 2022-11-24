@@ -60,7 +60,7 @@
 // so VIA Configurator can detect compatible firmware.
 #define VIA_PROTOCOL_VERSION 0x000A
 
-#define OPENRGB_PROTOCOL_VERSION 0xC //add openRGB Version
+#define OPENRGB_PROTOCOL_VERSION 0xD //add openRGB Version
 
 #define RAW_EPSIZE 64 //set openRGB raw epsize needed
 

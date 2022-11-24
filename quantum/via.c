@@ -52,7 +52,7 @@
 #include "eeprom.h"
 #include "version.h" // for QMK_BUILDDATE used in EEPROM magic
 #include "via_ensure_keycode.h"
-#include "print.h"
+
 
 // Forward declare some helpers.
 #if defined(VIA_QMK_BACKLIGHT_ENABLE)
@@ -166,59 +166,48 @@ static const uint8_t openrgb_rgb_matrix_effects_indexes[]           = {
 #ifndef DISABLE_RGB_MATRIX_HUE_WAVE
     28,
 #endif
-#ifndef DISABLE_RGB_MATRIX_PIXEL_RAIN
+#if defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && !defined(DISABLE_RGB_MATRIX_TYPING_HEATMAP)
     29,
 #endif
-#ifndef DISABLE_RGB_MATRIX_PIXEL_FLOW
+#if defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && !defined(DISABLE_RGB_MATRIX_DIGITAL_RAIN)
     30,
 #endif
-#ifndef DISABLE_RGB_MATRIX_PIXEL_FRACTAL
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
     31,
 #endif
-
-#if defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && !defined(DISABLE_RGB_MATRIX_TYPING_HEATMAP)
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE
     32,
 #endif
-#if defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && !defined(DISABLE_RGB_MATRIX_DIGITAL_RAIN)
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
     33,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
     34,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
     35,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
     36,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
     37,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
     38,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SPLASH
     39,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_MULTISPLASH
     40,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_SPLASH
     41,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SPLASH
+#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_MULTISPLASH
     42,
 #endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_MULTISPLASH
-    43,
-#endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_SPLASH
-    44,
-#endif
-#if defined RGB_MATRIX_KEYREACTIVE_ENABLED && !defined DISABLE_RGB_MATRIX_SOLID_MULTISPLASH
-    45,
-#endif
-    46, //siganlRGB effect
 };
 
 //static uint8_t raw_hid_buffer[RAW_EPSIZE];
@@ -452,43 +441,43 @@ __attribute__((weak)) void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
 // raw_hid_send() is called at the end, with the same buffer, which was
 // possibly modified with returned values.
 void raw_hid_receive(uint8_t *data, uint8_t length) {
+    // openRGB
+    switch (*data) {
+        case OPENRGB_GET_PROTOCOL_VERSION:
+            openrgb_get_protocol_version();
+            break;
+        case OPENRGB_GET_QMK_VERSION:
+            openrgb_get_qmk_version();
+            break;
+        case OPENRGB_GET_DEVICE_INFO:
+            openrgb_get_device_info();
+            break;
+        case OPENRGB_GET_MODE_INFO:
+            openrgb_get_mode_info();
+            break;
+        case OPENRGB_GET_LED_INFO:
+            openrgb_get_led_info(data);
+            break;
+        case OPENRGB_GET_ENABLED_MODES:
+            openrgb_get_enabled_modes();
+            break;
 
-        // openRGB
-        switch (*data) {
-            case OPENRGB_GET_PROTOCOL_VERSION:
-                openrgb_get_protocol_version();
-                break;
-            case OPENRGB_GET_QMK_VERSION:
-                openrgb_get_qmk_version();
-                break;
-            case OPENRGB_GET_DEVICE_INFO:
-                openrgb_get_device_info();
-                break;
-            case OPENRGB_GET_MODE_INFO:
-                openrgb_get_mode_info();
-                break;
-            case OPENRGB_GET_LED_INFO:
-                openrgb_get_led_info(data);
-                break;
-            case OPENRGB_GET_ENABLED_MODES:
-                openrgb_get_enabled_modes();
-                break;
-            case OPENRGB_SET_MODE:
-                openrgb_set_mode(data);
-                break;
-            case OPENRGB_DIRECT_MODE_SET_SINGLE_LED:
-                openrgb_direct_mode_set_single_led(data);
-                break;
-            case OPENRGB_DIRECT_MODE_SET_LEDS:
-                openrgb_direct_mode_set_leds(data);
-                break;
-        }
+        case OPENRGB_SET_MODE:
+            openrgb_set_mode(data);
+            break;
+        case OPENRGB_DIRECT_MODE_SET_SINGLE_LED:
+            openrgb_direct_mode_set_single_led(data);
+            break;
+        case OPENRGB_DIRECT_MODE_SET_LEDS:
+            openrgb_direct_mode_set_leds(data);
+            break;
+    }
 
-        if (*data != OPENRGB_DIRECT_MODE_SET_LEDS) {
-            packet[RAW_EPSIZE - 1] = OPENRGB_END_OF_MESSAGE;
-            raw_hid_send(packet, RAW_EPSIZE);
-            memset(packet, 0x00, RAW_EPSIZE);
-        }
+    if (*data != OPENRGB_DIRECT_MODE_SET_LEDS) {
+        packet[RAW_EPSIZE - 1] = OPENRGB_END_OF_MESSAGE;
+        raw_hid_send(packet, RAW_EPSIZE);
+        memset(packet, 0x00, RAW_EPSIZE);
+    }
 
     return;
 
@@ -1064,7 +1053,7 @@ void openrgb_set_mode(uint8_t *data) {
     const uint8_t v     = data[3];
     const uint8_t mode  = data[4];
     const uint8_t speed = data[5];
-    const uint8_t save = data[6];
+    //const uint8_t save = data[6];
 
     packet[0] = OPENRGB_SET_MODE;
 
@@ -1073,19 +1062,25 @@ void openrgb_set_mode(uint8_t *data) {
         return;
     }
 
-    if (save == 1) {
-        rgb_matrix_mode(mode);
-        rgb_matrix_set_speed(speed);
-        rgb_matrix_sethsv(h, s, v);
-    }
-    else {
-        rgb_matrix_mode_noeeprom(mode);
+    // if (save == 1) {
+    //     rgb_matrix_mode(mode);
+    //     rgb_matrix_set_speed(speed);
+    //     rgb_matrix_sethsv(h, s, v);
+    // }
+    // else {
+        if (mode == 1){
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_OPENRGB_DIRECT);
+        }else{
+            rgb_matrix_mode_noeeprom(mode);
+        }
+
         rgb_matrix_set_speed_noeeprom(speed);
         rgb_matrix_sethsv_noeeprom(h, s, v);
-    }
+    // }
 
     packet[RAW_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
+
 void openrgb_direct_mode_set_single_led(uint8_t *data) {
     const uint8_t led = data[1];
     const uint8_t r   = data[2];
@@ -1106,12 +1101,11 @@ void openrgb_direct_mode_set_single_led(uint8_t *data) {
     packet[RAW_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 void openrgb_direct_mode_set_leds(uint8_t *data) {
-    const uint8_t first_led   = data[1];
-    const uint8_t number_leds = data[2];
+    const uint8_t number_leds = data[1];
 
     for (uint8_t i = 0; i < number_leds; i++) {
-        const uint8_t color_idx = first_led + i;
-        const uint8_t data_idx  = i * 3;
+        const uint8_t data_idx  = i * 4;
+        const uint8_t color_idx = data[data_idx + 2];
 
         g_openrgb_direct_mode_colors[color_idx].r = data[data_idx + 3];
         g_openrgb_direct_mode_colors[color_idx].g = data[data_idx + 4];
