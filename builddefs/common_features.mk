@@ -613,20 +613,20 @@ ifeq ($(strip $(LED_TABLES)), yes)
 endif
 
 ifeq ($(strip $(SIGNALRGB_SUPPORT_ENABLE)), yes)
-    ifneq ($(strip $(VIA_ENABLE)), yes)
+#    ifneq ($(strip $(VIA_ENABLE)), yes)
     RAW_ENABLE := yes
     SRC += $(QUANTUM_DIR)/signalrgb.c
     OPT_DEFS += -DSIGNALRGB_SUPPORT_ENABLE
-    endif
+#    endif
 endif
 
-ifeq ($(strip $(OPENRGB_ENABLE)), yes)
-	ifneq ($(strip $(VIA_ENABLE)), yes)
-    RAW_ENABLE := yes
-    SRC += $(QUANTUM_DIR)/openrgb.c
-    OPT_DEFS += -DOPENRGB_ENABLE
-	endif
-endif
+ ifeq ($(strip $(OPENRGB_ENABLE)), yes)
+# 	ifneq ($(strip $(VIA_ENABLE)), yes)
+     RAW_ENABLE := yes
+     SRC += $(QUANTUM_DIR)/openrgb.c
+     OPT_DEFS += -DOPENRGB_ENABLE
+# 	endif
+ endif
 
 ifeq ($(strip $(VIA_ENABLE)), yes)
     DYNAMIC_KEYMAP_ENABLE := yes

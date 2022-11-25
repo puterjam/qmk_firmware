@@ -23,7 +23,7 @@ enum signalrgb_responses //These are a bit clunky right now. Could use improveme
     DEVICE_UNIQUE_IDENTIFIER_BYTE_1 = 0,
     DEVICE_UNIQUE_IDENTIFIER_BYTE_2 = 0,
     DEVICE_UNIQUE_IDENTIFIER_BYTE_3 = 0,
-    FIRMWARE_TYPE_BYTE = 1, 
+    FIRMWARE_TYPE_BYTE = 1,
     DEVICE_ERROR_LEDS = 255, //Error code to show that there are more leds than a packet will allow.
 };
 
@@ -33,7 +33,8 @@ void get_unique_identifier(void);
 void led_streaming(uint8_t *data);
 void signalrgb_mode_enable(void);
 void signalrgb_mode_disable(void);
-void get_total_leds(void);
+void signalrgb_total_leds(void);
+void signalrgb_firmware_type(void);
 
 //Changelogs for Firmware Versions------------------------------------
 //V1.0.1 added detection for the total number of LEDs a board has. Plugins need a rewrite to make use of this change. Rewritten plugins will not function with older firmware.

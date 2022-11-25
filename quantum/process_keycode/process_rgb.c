@@ -211,6 +211,19 @@ bool process_rgb(const uint16_t keycode, const keyrecord_t *record) {
                 handleKeycodeRGBMode(RGBLIGHT_MODE_TWINKLE, RGBLIGHT_MODE_TWINKLE_end);
 #endif
                 return false;
+
+            //OpenRGB,SignalRGB toggle
+            case OR_TOG:
+#if defined(OPENRGB_ENABLE) && !defined(RGBLIGHT_DISABLE_KEYCODES)
+
+#endif
+                return false;
+
+            case SR_TOG:
+#if defined(SIGNALRGB_SUPPORT_ENABLE) && !defined(RGBLIGHT_DISABLE_KEYCODES)
+
+#endif
+                return false;
         }
     }
 

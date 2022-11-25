@@ -9,7 +9,7 @@
 #include "raw_hid.h"
 
 
- uint8_t packet[32];
+static uint8_t packet[RAW_EPSIZE];
 
 void get_qmk_version(void) //Grab the QMK Version the board's firmware is built off of
 {
@@ -21,7 +21,7 @@ void get_qmk_version(void) //Grab the QMK Version the board's firmware is built 
         raw_hid_send(packet, 32);
 }
 
-void get_signalrgb_protocol_version(void) 
+void get_signalrgb_protocol_version(void)
 {
         packet[0] = GET_PROTOCOL_VERSION;
         packet[1] = PROTOCOL_VERSION_BYTE_1;
@@ -44,22 +44,22 @@ void get_unique_identifier(void) //Grab the unique identifier for each specific 
 void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
 {
     uint8_t index = data[1];
-    uint8_t numberofleds = data[2]; 
+    uint8_t numberofleds = data[2];
 
     if(numberofleds >= 10)
     {
         packet[1] = DEVICE_ERROR_LEDS;
         raw_hid_send(packet,32);
-        return; 
-    } 
-    
+        return;
+    }
+
     for (uint8_t i = 0; i < numberofleds; i++)
     {
       uint8_t offset = (i * 3) + 3;
       uint8_t  r = data[offset];
       uint8_t  g = data[offset + 1];
       uint8_t  b = data[offset + 2];
-    
+
       rgb_matrix_set_color(index + i, r, g, b);
      }
 }
@@ -74,7 +74,7 @@ void signalrgb_mode_disable(void)
     rgb_matrix_reload_from_eeprom(); //Reloading last effect from eeprom
 }
 
-void get_total_leds(void)//Grab total number of leds that a board has.
+void signalrgb_total_leds(void)//Grab total number of leds that a board has.
 {
     packet[0] = GET_TOTAL_LEDS;
     packet[1] = DRIVER_LED_TOTAL;
@@ -82,7 +82,7 @@ void get_total_leds(void)//Grab total number of leds that a board has.
     raw_hid_send(packet, 32);
 }
 
-void get_firmware_type(void) //Grab which fork of qmk a board is running.
+void signalrgb_firmware_type(void) //Grab which fork of qmk a board is running.
 {
     packet[0] = GET_FIRMWARE_TYPE;
     packet[1] = FIRMWARE_TYPE_BYTE;
@@ -90,11 +90,13 @@ void get_firmware_type(void) //Grab which fork of qmk a board is running.
     raw_hid_send(packet, 32);
 }
 
-void raw_hid_receive(uint8_t *data, uint8_t length) 
+//if not defined VIA ENABLE，receive raw hid
+#ifndef VIA_ENABLE
+void raw_hid_receive(uint8_t *data, uint8_t length)
 {
         switch (data[0]) {
         case GET_QMK_VERSION:
-           
+
         get_qmk_version();
 
         break;
@@ -108,19 +110,19 @@ void raw_hid_receive(uint8_t *data, uint8_t length)
         get_unique_identifier();
 
         break;
-        case STREAM_RGB_DATA: 
+        case STREAM_RGB_DATA:
 
         led_streaming(data);
 
         break;
 
-        case SET_SIGNALRGB_MODE_ENABLE: 
+        case SET_SIGNALRGB_MODE_ENABLE:
 
         signalrgb_mode_enable();
 
         break;
 
-        case SET_SIGNALRGB_MODE_DISABLE: 
+        case SET_SIGNALRGB_MODE_DISABLE:
 
         signalrgb_mode_disable();
 
@@ -134,7 +136,7 @@ void raw_hid_receive(uint8_t *data, uint8_t length)
 
         case GET_FIRMWARE_TYPE:
 
-        get_firmware_type();
+        signalrgb_firmware_type();
 
         break;
 
@@ -142,3 +144,4 @@ void raw_hid_receive(uint8_t *data, uint8_t length)
         break;
     }
 }
+#endif
