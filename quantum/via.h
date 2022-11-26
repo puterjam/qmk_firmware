@@ -179,8 +179,9 @@ enum user_keycodes {
 //extern bool g_openrgb_enabled;
 //extern bool g_signalrgb_enabled;
 
-void via_openrgb_toggle(void);
-//void via_signalrgb_toggle(void);
+void via_openrgb_enabled(void);
+void via_openrgb_disbled(void);
+void via_signalrgb_enabled(void);
 
 // Can be called in an overriding via_init_kb() to test if keyboard level code usage of
 // EEPROM is invalid and use/save defaults.

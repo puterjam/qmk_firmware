@@ -50,6 +50,8 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
     uint8_t index = data[1];
     uint8_t numberofleds = data[2];
 
+    float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
+
     if(numberofleds >= 10)
     {
         packet[1] = DEVICE_ERROR_LEDS;
@@ -60,9 +62,9 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
     for (uint8_t i = 0; i < numberofleds; i++)
     {
       uint8_t offset = (i * 3) + 3;
-      uint8_t  r = data[offset];
-      uint8_t  g = data[offset + 1];
-      uint8_t  b = data[offset + 2];
+      uint8_t  r = brightness * data[offset];
+      uint8_t  g = brightness * data[offset + 1];
+      uint8_t  b = brightness * data[offset + 2];
 
       rgb_matrix_set_color(index + i, r, g, b);
      }

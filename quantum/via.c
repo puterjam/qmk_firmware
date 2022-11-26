@@ -211,18 +211,24 @@ bool process_record_via(uint16_t keycode, keyrecord_t *record) {
 bool g_openrgb_enabled = false; //default signalrgb off
 //bool g_signalrgb_enabled = true; //default signalrgb on
 
-void     via_openrgb_toggle(void){
+void via_openrgb_disbled(void){
     #ifdef OPENRGB_ENABLE
-    if(g_openrgb_enabled){
         g_openrgb_enabled = false;
-        rgb_matrix_reload_from_eeprom();
-    }else{
-        g_openrgb_enabled = true;
-       // g_signalrgb_enabled = false;
-
-        rgb_matrix_mode_noeeprom(RGB_MATRIX_OPENRGB_DIRECT);
-    }
     #endif
+}
+
+void via_openrgb_enabled(void){
+ #ifdef OPENRGB_ENABLE
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_OPENRGB_DIRECT);
+    g_openrgb_enabled = true;
+ #endif
+}
+
+void via_signalrgb_enabled(void){
+ #ifdef SIGNALRGB_SUPPORT_ENABLE
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SIGNALRGB);
+    g_openrgb_enabled = false;
+ #endif
 }
 
 // void     via_signalrgb_toggle(void){
@@ -388,49 +394,41 @@ uint8_t *command_data = &(data[1]);
         case id_signalrgb_qmk_version:{
                 get_qmk_version();
                 return;
-                break;
         }
 
         case id_signalrgb_protocol_version:{
                 get_signalrgb_protocol_version();
                 return;
-                break;
         }
 
         case id_signalrgb_unique_identifier:{
                 get_unique_identifier();
                 return;
-                break;
         }
 
         case id_signalrgb_stream_leds:{
                 led_streaming(data);
                 return;
-                break;
         }
 
         case id_signalrgb_effect_enable:{
                 signalrgb_mode_enable();
                 return;
-                break;
         }
 
         case id_signalrgb_effect_disable:{
                 signalrgb_mode_disable();
                 return;
-                break;
         }
 
         case id_signalrgb_total_leds:{
                 signalrgb_total_leds();
                 return;
-                break;
         }
 
         case id_signalrgb_firmware_type:{
                 signalrgb_firmware_type();
                 return;
-                break;
         }
     }
 #endif
