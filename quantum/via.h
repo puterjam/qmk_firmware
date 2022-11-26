@@ -176,6 +176,12 @@ enum user_keycodes {
     USER15,
 };
 
+//extern bool g_openrgb_enabled;
+//extern bool g_signalrgb_enabled;
+
+void via_openrgb_toggle(void);
+//void via_signalrgb_toggle(void);
+
 // Can be called in an overriding via_init_kb() to test if keyboard level code usage of
 // EEPROM is invalid and use/save defaults.
 bool via_eeprom_is_valid(void);
@@ -194,10 +200,10 @@ void     via_set_layout_options(uint32_t value);
 void     via_set_layout_options_kb(uint32_t value);
 
 //Used to handle OpenRGB Compatibility
-//extern RGB g_openrgb_direct_mode_colors[DRIVER_LED_TOTAL];
+extern RGB g_openrgb_direct_mode_colors[DRIVER_LED_TOTAL];
 
 // void openrgb_get_protocol_version(void);
-// void openrgb_get_qmk_version(void);
+// void openrgb_get_qmk_verwsion(void);
 // void openrgb_get_device_info(void);
 // void openrgb_get_mode_info(void);
 // void openrgb_get_led_info(uint8_t *data);

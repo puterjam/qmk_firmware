@@ -208,6 +208,35 @@ bool process_record_via(uint16_t keycode, keyrecord_t *record) {
 }
 
 
+bool g_openrgb_enabled = false; //default signalrgb off
+//bool g_signalrgb_enabled = true; //default signalrgb on
+
+void     via_openrgb_toggle(void){
+    #ifdef OPENRGB_ENABLE
+    if(g_openrgb_enabled){
+        g_openrgb_enabled = false;
+        rgb_matrix_reload_from_eeprom();
+    }else{
+        g_openrgb_enabled = true;
+       // g_signalrgb_enabled = false;
+
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_OPENRGB_DIRECT);
+    }
+    #endif
+}
+
+// void     via_signalrgb_toggle(void){
+//     if(g_signalrgb_enabled){
+//         g_signalrgb_enabled = false;
+//         rgb_matrix_reload_from_eeprom();
+//     }else{
+//         g_signalrgb_enabled = true;
+//         g_openrgb_enabled = false;
+// #ifdef SIGNALRGB_SUPPORT_ENABLE
+//         rgb_matrix_mode_noeeprom(RGB_MATRIX_SIGNALRGB);
+// #endif
+//     }
+// }
 
 // ------------------- signalrgb protocol ---------------------
 // #ifdef SIGNALRGB_SUPPORT_ENABLE
@@ -296,8 +325,6 @@ bool process_record_via(uint16_t keycode, keyrecord_t *record) {
 //------------------ signalrgb protocol ------------------
 
 
-
-
 // Keyboard level code can override this to handle custom messages from VIA.
 // See raw_hid_receive() implementation.
 // DO NOT call raw_hid_send() in the override function.
@@ -317,102 +344,99 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
 uint8_t *command_id   = &(data[0]);
 uint8_t *command_data = &(data[1]);
 
+ //openrgb HID command
 #ifdef OPENRGB_ENABLE
-    // openRGB
-    switch (*data) {
-        case OPENRGB_GET_PROTOCOL_VERSION:
-            openrgb_get_protocol_version();
-            break;
-        case OPENRGB_GET_QMK_VERSION:
-            openrgb_get_qmk_version();
-            break;
-        case OPENRGB_GET_DEVICE_INFO:
-            openrgb_get_device_info();
-            break;
-        case OPENRGB_GET_MODE_INFO:
-            openrgb_get_mode_info();
-            break;
-        case OPENRGB_GET_LED_INFO:
-            openrgb_get_led_info(data);
-            break;
-        case OPENRGB_GET_ENABLED_MODES:
-            openrgb_get_enabled_modes();
-            break;
+    if (g_openrgb_enabled){
+        // openRGB
+        switch (*data) {
+            case OPENRGB_GET_PROTOCOL_VERSION:
+                openrgb_get_protocol_version();
+                break;
+            case OPENRGB_GET_QMK_VERSION:
+                openrgb_get_qmk_version();
+                break;
+            case OPENRGB_GET_DEVICE_INFO:
+                openrgb_get_device_info();
+                break;
+            case OPENRGB_GET_MODE_INFO:
+                openrgb_get_mode_info();
+                break;
+            case OPENRGB_GET_LED_INFO:
+                openrgb_get_led_info(data);
+                break;
+            case OPENRGB_GET_ENABLED_MODES:
+                openrgb_get_enabled_modes();
+                break;
 
-        case OPENRGB_SET_MODE:
-            openrgb_set_mode(data);
-            break;
-        case OPENRGB_DIRECT_MODE_SET_SINGLE_LED:
-            openrgb_direct_mode_set_single_led(data);
-            break;
-        case OPENRGB_DIRECT_MODE_SET_LEDS:
-            openrgb_direct_mode_set_leds(data);
-            break;
+            case OPENRGB_SET_MODE:
+                openrgb_set_mode(data);
+                break;
+            case OPENRGB_DIRECT_MODE_SET_SINGLE_LED:
+                openrgb_direct_mode_set_single_led(data);
+                break;
+            case OPENRGB_DIRECT_MODE_SET_LEDS:
+                openrgb_direct_mode_set_leds(data);
+                break;
+        }
+        return;
     }
-
-    // if (*data != OPENRGB_DIRECT_MODE_SET_LEDS) {
-    //     packet[RAW_EPSIZE - 1] = OPENRGB_END_OF_MESSAGE;
-
-    //     dprintf("send packet %d, RAW_EPSIZE %d\n", packet,RAW_EPSIZE);
-    //     raw_hid_send(packet, RAW_EPSIZE);
-    //     memset(packet, 0x00, RAW_EPSIZE);
-    // }
-
-    return true;
 #endif
 
-    // via & signalRGB
-    switch (*command_id) {
+ //signalrgb HID command
 #ifdef SIGNALRGB_SUPPORT_ENABLE
-         case id_signalrgb_qmk_version:
-         {
-            get_qmk_version();
-            break;
-         }
-
-        case id_signalrgb_protocol_version:
-        {
-            get_signalrgb_protocol_version();
-            break;
+    switch (*command_id) {
+        case id_signalrgb_qmk_version:{
+                get_qmk_version();
+                return;
+                break;
         }
 
-        case id_signalrgb_unique_identifier:
-        {
-            get_unique_identifier();
-            break;
+        case id_signalrgb_protocol_version:{
+                get_signalrgb_protocol_version();
+                return;
+                break;
         }
 
-        case id_signalrgb_stream_leds:
-        {
-            led_streaming(data);
-            break;
+        case id_signalrgb_unique_identifier:{
+                get_unique_identifier();
+                return;
+                break;
         }
 
-        case id_signalrgb_effect_enable:
-        {
-            signalrgb_mode_enable();
-            break;
+        case id_signalrgb_stream_leds:{
+                led_streaming(data);
+                return;
+                break;
         }
 
-        case id_signalrgb_effect_disable:
-        {
-            signalrgb_mode_disable();
-            break;
+        case id_signalrgb_effect_enable:{
+                signalrgb_mode_enable();
+                return;
+                break;
         }
 
-        case id_signalrgb_total_leds:
-        {
-            signalrgb_total_leds();
-            break;
+        case id_signalrgb_effect_disable:{
+                signalrgb_mode_disable();
+                return;
+                break;
         }
 
-        case id_signalrgb_firmware_type:
-        {
-            signalrgb_firmware_type();
-            break;
+        case id_signalrgb_total_leds:{
+                signalrgb_total_leds();
+                return;
+                break;
         }
+
+        case id_signalrgb_firmware_type:{
+                signalrgb_firmware_type();
+                return;
+                break;
+        }
+    }
 #endif
 
+ //via HID command
+    switch (*command_id) {
         case id_get_protocol_version: {
             command_data[0] = VIA_PROTOCOL_VERSION >> 8;
             command_data[1] = VIA_PROTOCOL_VERSION & 0xFF;

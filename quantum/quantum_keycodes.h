@@ -358,7 +358,6 @@ enum quantum_keycodes {
     RGB_MODE_GRADIENT, // 5CD5
     RGB_MODE_RGBTEST,  // 5CD6
 
-
     // Velocikey
     VLK_TOG, // 5CD7
 
@@ -611,10 +610,6 @@ enum quantum_keycodes {
     MAGIC_TOGGLE_ESCAPE_CAPSLOCK,
 
     UNICODE_MODE_EMACS,
-
-    // RGB software key
-    OP_TOG, //0x5DB1
-    SR_TOG, //0x5DB2
 
     // Start of custom keycode range for keyboards and keymaps - always leave at the end
     SAFE_RANGE
