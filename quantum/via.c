@@ -42,7 +42,6 @@
 #    define VIA_QMK_RGB_MATRIX_ENABLE
 #endif
 
-
 #include "quantum.h"
 
 #include "via.h"
@@ -52,15 +51,6 @@
 #include "eeprom.h"
 #include "version.h" // for QMK_BUILDDATE used in EEPROM magic
 #include "via_ensure_keycode.h"
-
-
-#ifdef OPENRGB_ENABLE
-#   include "openrgb.h"
-#endif
-
-#ifdef SIGNALRGB_SUPPORT_ENABLE
-#   include "signalrgb.h"
-#endif
 
 // Forward declare some helpers.
 #if defined(VIA_QMK_BACKLIGHT_ENABLE)
@@ -79,8 +69,6 @@ void via_qmk_rgb_matrix_set_value(uint8_t *data);
 void via_qmk_rgb_matrix_get_value(uint8_t *data);
 void eeconfig_update_rgb_matrix(void);
 #endif
-
-//static uint8_t raw_hid_buffer[RAW_EPSIZE];
 
 // Can be called in an overriding via_init_kb() to test if keyboard level code usage of
 // EEPROM is invalid and use/save defaults.
@@ -207,130 +195,6 @@ bool process_record_via(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-
-bool g_openrgb_enabled = false; //default signalrgb off
-//bool g_signalrgb_enabled = true; //default signalrgb on
-
-void via_openrgb_disbled(void){
-    #ifdef OPENRGB_ENABLE
-        g_openrgb_enabled = false;
-    #endif
-}
-
-void via_openrgb_enabled(void){
- #ifdef OPENRGB_ENABLE
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_OPENRGB_DIRECT);
-    g_openrgb_enabled = true;
- #endif
-}
-
-void via_signalrgb_enabled(void){
- #ifdef SIGNALRGB_SUPPORT_ENABLE
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_SIGNALRGB);
-    g_openrgb_enabled = false;
- #endif
-}
-
-// void     via_signalrgb_toggle(void){
-//     if(g_signalrgb_enabled){
-//         g_signalrgb_enabled = false;
-//         rgb_matrix_reload_from_eeprom();
-//     }else{
-//         g_signalrgb_enabled = true;
-//         g_openrgb_enabled = false;
-// #ifdef SIGNALRGB_SUPPORT_ENABLE
-//         rgb_matrix_mode_noeeprom(RGB_MATRIX_SIGNALRGB);
-// #endif
-//     }
-// }
-
-// ------------------- signalrgb protocol ---------------------
-// #ifdef SIGNALRGB_SUPPORT_ENABLE
-// static uint8_t packet[RAW_EPSIZE];
-
-//  void get_qmk_version(void) //Grab the QMK Version
-// {
-//         packet[0] = id_signalrgb_qmk_version;
-//         packet[1] = QMK_VERSION_BYTE_1;
-//         packet[2] = QMK_VERSION_BYTE_2;
-//         packet[3] = QMK_VERSION_BYTE_3;
-
-//         raw_hid_send(packet, RAW_EPSIZE);
-// }
-
-// void get_signalrgb_protocol_version(void) //Grab what version of the SignalRGB protocol a keyboard is running
-// {
-//         packet[0] = id_signalrgb_protocol_version;
-//         packet[1] = PROTOCOL_VERSION_BYTE_1;
-//         packet[2] = PROTOCOL_VERSION_BYTE_2;
-//         packet[3] = PROTOCOL_VERSION_BYTE_3;
-
-//         raw_hid_send(packet, RAW_EPSIZE);
-// }
-
-// void get_unique_identifier(void) //Grab the unique identifier for each specific model of keyboard.
-// {
-//         packet[0] = id_signalrgb_unique_identifier;
-//         packet[1] = DEVICE_UNIQUE_IDENTIFIER_BYTE_1;
-//         packet[2] = DEVICE_UNIQUE_IDENTIFIER_BYTE_2;
-//         packet[3] = DEVICE_UNIQUE_IDENTIFIER_BYTE_3;
-
-//         raw_hid_send(packet, RAW_EPSIZE);
-// }
-
-// void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
-// {
-//     uint8_t index = data[1];
-//     uint8_t numberofleds = data[2];
-
-//     if(numberofleds >= 10)
-//     {
-//         packet[1] = DEVICE_ERROR_LEDS;
-//         raw_hid_send(packet,RAW_EPSIZE);
-//         return;
-//     }
-
-//     for (uint8_t i = 0; i < numberofleds; i++)
-//     {
-//       uint8_t offset = (i * 3) + 3;
-//       uint8_t  r = data[offset];
-//       uint8_t  g = data[offset + 1];
-//       uint8_t  b = data[offset + 2];
-
-//       rgb_matrix_set_color(index + i, r, g, b);
-//      }
-// }
-
-
-
-// void signalrgb_mode_enable(void)
-// {
-//     rgb_matrix_mode_noeeprom(RGB_MATRIX_SIGNALRGB); //Set RGB Matrix to SignalRGB Compatible Mode
-// }
-
-// void signalrgb_mode_disable(void)
-// {
-//     rgb_matrix_reload_from_eeprom(); //Reloading last effect from eeprom
-// }
-
-// void signalrgb_total_leds(void)//Grab total number of leds that a board has.
-// {
-//     packet[0] = id_signalrgb_total_leds;
-//     packet[1] = DRIVER_LED_TOTAL;
-//     raw_hid_send(packet,RAW_EPSIZE);
-// }
-
-// void signalrgb_firmware_type(void) //Grab which fork of qmk a board is running.
-// {
-//     packet[0] = id_signalrgb_firmware_type;
-//     packet[1] = FIRMWARE_TYPE_BYTE;
-//     raw_hid_send(packet,RAW_EPSIZE);
-// }
-
-// #endif
-//------------------ signalrgb protocol ------------------
-
-
 // Keyboard level code can override this to handle custom messages from VIA.
 // See raw_hid_receive() implementation.
 // DO NOT call raw_hid_send() in the override function.
@@ -347,93 +211,8 @@ __attribute__((weak)) void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
 // raw_hid_send() is called at the end, with the same buffer, which was
 // possibly modified with returned values.
 void raw_hid_receive(uint8_t *data, uint8_t length) {
-uint8_t *command_id   = &(data[0]);
-uint8_t *command_data = &(data[1]);
-
- //openrgb HID command
-#ifdef OPENRGB_ENABLE
-    if (g_openrgb_enabled){
-        // openRGB
-        switch (*data) {
-            case OPENRGB_GET_PROTOCOL_VERSION:
-                openrgb_get_protocol_version();
-                break;
-            case OPENRGB_GET_QMK_VERSION:
-                openrgb_get_qmk_version();
-                break;
-            case OPENRGB_GET_DEVICE_INFO:
-                openrgb_get_device_info();
-                break;
-            case OPENRGB_GET_MODE_INFO:
-                openrgb_get_mode_info();
-                break;
-            case OPENRGB_GET_LED_INFO:
-                openrgb_get_led_info(data);
-                break;
-            case OPENRGB_GET_ENABLED_MODES:
-                openrgb_get_enabled_modes();
-                break;
-
-            case OPENRGB_SET_MODE:
-                openrgb_set_mode(data);
-                break;
-            case OPENRGB_DIRECT_MODE_SET_SINGLE_LED:
-                openrgb_direct_mode_set_single_led(data);
-                break;
-            case OPENRGB_DIRECT_MODE_SET_LEDS:
-                openrgb_direct_mode_set_leds(data);
-                break;
-        }
-        return;
-    }
-#endif
-
- //signalrgb HID command
-#ifdef SIGNALRGB_SUPPORT_ENABLE
-    switch (*command_id) {
-        case id_signalrgb_qmk_version:{
-                get_qmk_version();
-                return;
-        }
-
-        case id_signalrgb_protocol_version:{
-                get_signalrgb_protocol_version();
-                return;
-        }
-
-        case id_signalrgb_unique_identifier:{
-                get_unique_identifier();
-                return;
-        }
-
-        case id_signalrgb_stream_leds:{
-                led_streaming(data);
-                return;
-        }
-
-        case id_signalrgb_effect_enable:{
-                signalrgb_mode_enable();
-                return;
-        }
-
-        case id_signalrgb_effect_disable:{
-                signalrgb_mode_disable();
-                return;
-        }
-
-        case id_signalrgb_total_leds:{
-                signalrgb_total_leds();
-                return;
-        }
-
-        case id_signalrgb_firmware_type:{
-                signalrgb_firmware_type();
-                return;
-        }
-    }
-#endif
-
- //via HID command
+    uint8_t *command_id   = &(data[0]);
+    uint8_t *command_data = &(data[1]);
     switch (*command_id) {
         case id_get_protocol_version: {
             command_data[0] = VIA_PROTOCOL_VERSION >> 8;
@@ -618,7 +397,6 @@ uint8_t *command_data = &(data[1]);
             dynamic_keymap_set_buffer(offset, size, &command_data[3]);
             break;
         }
-
 #ifdef ENCODER_MAP_ENABLE
         case id_dynamic_keymap_get_encoder: {
             uint16_t keycode = dynamic_keymap_get_encoder(command_data[0], command_data[1], command_data[2] != 0);
@@ -631,7 +409,6 @@ uint8_t *command_data = &(data[1]);
             break;
         }
 #endif
-
         default: {
             // The command ID is not known
             // Return the unhandled state
@@ -642,7 +419,6 @@ uint8_t *command_data = &(data[1]);
 
     // Return the same buffer, optionally with values changed
     // (i.e. returning state to the host, or the unhandled state).
-
     raw_hid_send(data, length);
 }
 
@@ -840,4 +616,5 @@ void via_qmk_rgb_matrix_set_value(uint8_t *data) {
             break;
     }
 }
+
 #endif // #if defined(VIA_QMK_RGB_MATRIX_ENABLE)
