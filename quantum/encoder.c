@@ -55,6 +55,7 @@ static int8_t encoder_LUT[] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 
 
 static uint8_t encoder_state[NUM_ENCODERS]  = {0};
 static int8_t  encoder_pulses[NUM_ENCODERS] = {0};
+static bool    encoder_external_update[NUM_ENCODERS] = {false};
 
 // encoder counts
 static uint8_t thisCount;
@@ -143,9 +144,14 @@ void encoder_init(void) {
 static void encoder_exec_mapping(uint8_t index, bool clockwise) {
     // The delays below cater for Windows and its wonderful requirements.
     action_exec(clockwise ? ENCODER_CW_EVENT(index, true) : ENCODER_CCW_EVENT(index, true));
+#    if ENCODER_MAP_KEY_DELAY > 0
     wait_ms(ENCODER_MAP_KEY_DELAY);
+#    endif // ENCODER_MAP_KEY_DELAY > 0
+
     action_exec(clockwise ? ENCODER_CW_EVENT(index, false) : ENCODER_CCW_EVENT(index, false));
+#    if ENCODER_MAP_KEY_DELAY > 0
     wait_ms(ENCODER_MAP_KEY_DELAY);
+#    endif // ENCODER_MAP_KEY_DELAY > 0
 }
 #endif // ENCODER_MAP_ENABLE
 
@@ -205,10 +211,11 @@ bool encoder_read(void) {
     bool changed = false;
     for (uint8_t i = 0; i < thisCount; i++) {
         uint8_t new_status = (readPin(encoders_pad_a[i]) << 0) | (readPin(encoders_pad_b[i]) << 1);
-        if ((encoder_state[i] & 0x3) != new_status) {
+        if ((encoder_state[i] & 0x3) != new_status || encoder_external_update[i]) {
             encoder_state[i] <<= 2;
             encoder_state[i] |= new_status;
             changed |= encoder_update(i, encoder_state[i]);
+            encoder_external_update[i] = false;
         }
     }
     return changed;
@@ -252,3 +259,12 @@ void encoder_update_raw(uint8_t *slave_state) {
     if (changed) last_encoder_activity_trigger();
 }
 #endif
+
+void encoder_insert_state(void) {
+    for (uint8_t i = 0; i < thisCount; i++) {
+        encoder_state[i] <<= 2;
+        encoder_state[i] |= (readPin(encoders_pad_a[i]) << 0) | (readPin(encoders_pad_b[i]) << 1);
+        encoder_pulses[i] += encoder_LUT[encoder_state[i] & 0xF];
+        encoder_external_update[i] = true;
+    }
+}

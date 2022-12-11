@@ -1,4 +1,4 @@
-/* Copyright 2022 @ Keychron (https://www.keychron.com)
+/* Copyright 2021 @ Keychron (https://www.keychron.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
 
 #include "quantum.h"
 
-#if   defined(KEYBOARD_keychron_q6_ansi)
-#    include "ansi.h"
-#elif defined(KEYBOARD_keychron_q6_ansi_encoder)
-#    include "ansi_encoder.h"
-#elif defined(KEYBOARD_keychron_q6_iso)
-#    include "iso.h"
-#elif defined(KEYBOARD_keychron_q6_iso_encoder)
-#    include "iso_encoder.h"
+#if   defined(KEYBOARD_keychron_q6_q6_ansi_stm32l432)
+#    include "q6_ansi_stm32l432.h"
+#elif defined(KEYBOARD_keychron_q6_q6_ansi_stm32l432_ec11)
+#    include "q6_ansi_stm32l432_ec11.h"
+#elif defined(KEYBOARD_keychron_q6_q6_iso_stm32l432)
+#    include "q6_iso_stm32l432.h"
+#elif defined(KEYBOARD_keychron_q6_q6_iso_stm32l432_ec11)
+#    include "q6_iso_stm32l432_ec11.h"
 #endif

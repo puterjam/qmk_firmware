@@ -8,11 +8,11 @@ A customizable 100% keyboard.
 
 Make example for this keyboard (after setting up your build environment):
 
-    make keychron/q6/ansi:default
+    make keychron/q6/q6_ansi_stm32l432:default
 
 Flashing example for this keyboard:
 
-    make keychron/q6/ansi:default:flash
+    make keychron/q6/q6_ansi_stm32l432:flash
 
 **Reset Key**: Hold down the key located at *K00*, commonly programmed as *Esc* while plugging in the keyboard.
 

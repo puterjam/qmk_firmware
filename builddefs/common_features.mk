@@ -625,7 +625,7 @@ endif
  endif
 
 ifeq ($(strip $(HIDRGB_ENABLE)), yes)
-    SRC += $(QUANTUM_DIR)/rgb_hid.c
+    SRC += $(QUANTUM_DIR)/hidrgb.c
     OPT_DEFS += -DHIDRGB_ENABLE
 endif
 

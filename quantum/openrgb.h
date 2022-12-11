@@ -20,8 +20,6 @@
 // so OpenRGB can detect compatible firmware.
 #define OPENRGB_PROTOCOL_VERSION 0xE //add openRGB Version
 
-#define OPENRGB_EPSIZE 64 //set openRGB raw epsize needed
-
 enum openrgb_command_id {
     OPENRGB_GET_PROTOCOL_VERSION = 1,
     OPENRGB_GET_QMK_VERSION,
@@ -42,9 +40,7 @@ enum openrgb_responses {
 };
 
 extern RGB g_openrgb_direct_mode_colors[DRIVER_LED_TOTAL];
-
 bool openrgb_command_handler(uint8_t *data, uint8_t length);
-
 void openrgb_get_protocol_version(void);
 void openrgb_get_qmk_version(void);
 void openrgb_get_device_info(void);
