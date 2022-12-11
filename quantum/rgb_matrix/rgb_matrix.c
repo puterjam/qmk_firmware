@@ -290,12 +290,22 @@ void rgb_matrix_test(void) {
     }
 }
 
+__attribute__((weak)) void rgb_matrix_indicators_none_kb(void) {}
+
+__attribute__((weak)) void rgb_matrix_indicators_none_user(void) {}
+
+void rgb_matrix_none_indicators(void) {
+    rgb_matrix_indicators_none_kb();
+    rgb_matrix_indicators_none_user();
+}
+
 static bool rgb_matrix_none(effect_params_t *params) {
     if (!params->init) {
         return false;
     }
 
     rgb_matrix_set_color_all(0, 0, 0);
+    rgb_matrix_none_indicators();
     return false;
 }
 
@@ -452,12 +462,15 @@ void rgb_matrix_task(void) {
 
 void rgb_matrix_indicators(void) {
     rgb_matrix_indicators_kb();
-    rgb_matrix_indicators_user();
 }
 
-__attribute__((weak)) void rgb_matrix_indicators_kb(void) {}
+__attribute__((weak)) bool rgb_matrix_indicators_kb(void) {
+    return rgb_matrix_indicators_user();
+}
 
-__attribute__((weak)) void rgb_matrix_indicators_user(void) {}
+__attribute__((weak)) bool rgb_matrix_indicators_user(void) {
+    return true;
+}
 
 void rgb_matrix_indicators_advanced(effect_params_t *params) {
     /* special handling is needed for "params->iter", since it's already been incremented.
@@ -474,12 +487,15 @@ void rgb_matrix_indicators_advanced(effect_params_t *params) {
     uint8_t max = DRIVER_LED_TOTAL;
 #endif
     rgb_matrix_indicators_advanced_kb(min, max);
-    rgb_matrix_indicators_advanced_user(min, max);
 }
 
-__attribute__((weak)) void rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {}
+__attribute__((weak)) bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
+    return rgb_matrix_indicators_advanced_user(led_min, led_max);
+}
 
-__attribute__((weak)) void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {}
+__attribute__((weak)) bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    return true;
+}
 
 void rgb_matrix_init(void) {
     rgb_matrix_driver.init();

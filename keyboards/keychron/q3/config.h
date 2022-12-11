@@ -19,12 +19,16 @@
 /* key matrix size */
 #define MATRIX_ROWS 6
 #define MATRIX_COLS 16
+#define MATRIX_IO_DELAY 2
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION ROW2COL
 
 /* Set 0 if debouncing isn't needed */
 #define DEBOUNCE 5
+
+/* Drive high instead of pull high to unselect */
+#define MATRIX_UNSELECT_DRIVE_HIGH
 
 /* RGB Matrix Driver Configuration */
 #define DRIVER_COUNT 2
@@ -43,6 +47,7 @@
 
 /* DIP switch */
 #define DIP_SWITCH_MATRIX_GRID  { {5, 4} }
+#define SCAN_COUNT_MAX 100
 
 /* Disable DIP switch in matrix data */
 #define MATRIX_MASKED
@@ -103,5 +108,8 @@
 #define ENABLE_RGB_MATRIX_SOLID_SPLASH
 // #define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
 
-#define RGB_MATRIX_KEYPRESSES
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+#define RGB_MATRIX_KEYPRESSES
+
+/* Enable receive custom command from host */
+#define RAW_HID_CMD 0xAB

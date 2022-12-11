@@ -27,6 +27,10 @@ enum signalrgb_responses //These are a bit clunky right now. Could use improveme
     DEVICE_ERROR_LEDS = 255, //Error code to show that there are more leds than a packet will allow.
 };
 
+extern RGB g_signalrgb_mode_colors[DRIVER_LED_TOTAL];
+
+bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
+
 void get_qmk_version(void);
 void get_signalrgb_protocol_version(void);
 void get_unique_identifier(void);

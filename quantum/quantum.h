@@ -211,9 +211,7 @@ extern layer_state_t layer_state;
 #endif
 
 #ifdef SIGNALRGB_SUPPORT_ENABLE
-#    ifndef VIA_ENABLE
 #    include "signalrgb.h"
-#    endif
 #endif
 
 #ifdef VIA_ENABLE
@@ -221,9 +219,7 @@ extern layer_state_t layer_state;
 #endif
 
 #ifdef OPENRGB_ENABLE
-#    ifndef VIA_ENABLE
 #    include "openrgb.h"
-#    endif
 #endif
 
 #ifdef WPM_ENABLE
