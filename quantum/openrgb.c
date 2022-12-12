@@ -311,7 +311,7 @@ void openrgb_get_led_info(uint8_t *data) {
         }
 
         if (col >= MATRIX_COLS || row >= MATRIX_ROWS) {
-            raw_hid_buffer[data_idx + 7] = KC_NO;
+            raw_hid_buffer[data_idx + 7] = KC_UNDEFINED; // fix some kb, has no keymap led
         }
         else {
             raw_hid_buffer[data_idx + 7] = pgm_read_byte(&keymaps[OPENRGB_DEFAULT_KEYMAP_ID][row][col]);
