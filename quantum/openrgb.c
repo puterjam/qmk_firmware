@@ -31,19 +31,20 @@
 #    define OPENRGB_DEFAULT_KEYMAP_ID 0 // default keyamp id，read keymap by id from u keyboard
 #endif
 
-#if !defined(OPENRGB_DIRECT_MODE_STARTUP_RED)
-#    define OPENRGB_DIRECT_MODE_STARTUP_RED 40
-#endif
+// #if !defined(OPENRGB_DIRECT_MODE_STARTUP_RED)
+// #    define OPENRGB_DIRECT_MODE_STARTUP_RED 40
+// #endif
 
-#if !defined(OPENRGB_DIRECT_MODE_STARTUP_GREEN)
-#    define OPENRGB_DIRECT_MODE_STARTUP_GREEN 40
-#endif
+// #if !defined(OPENRGB_DIRECT_MODE_STARTUP_GREEN)
+// #    define OPENRGB_DIRECT_MODE_STARTUP_GREEN 40
+// #endif
 
-#if !defined(OPENRGB_DIRECT_MODE_STARTUP_BLUE)
-#    define OPENRGB_DIRECT_MODE_STARTUP_BLUE 240
-#endif
+// #if !defined(OPENRGB_DIRECT_MODE_STARTUP_BLUE)
+// #    define OPENRGB_DIRECT_MODE_STARTUP_BLUE 240
+// #endif
 
-RGB g_openrgb_direct_mode_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] = {OPENRGB_DIRECT_MODE_STARTUP_GREEN, OPENRGB_DIRECT_MODE_STARTUP_RED, OPENRGB_DIRECT_MODE_STARTUP_BLUE}};
+// RGB g_hidrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] = {OPENRGB_DIRECT_MODE_STARTUP_GREEN, OPENRGB_DIRECT_MODE_STARTUP_RED, OPENRGB_DIRECT_MODE_STARTUP_BLUE}};
+
 static const uint8_t openrgb_rgb_matrix_effects_indexes[]           = {
     1,  2,
 
@@ -288,9 +289,9 @@ void openrgb_get_led_info(uint8_t *data) {
             raw_hid_buffer[data_idx + 1] = g_led_config.point[led_idx].x;
             raw_hid_buffer[data_idx + 2] = g_led_config.point[led_idx].y;
             raw_hid_buffer[data_idx + 3] = g_led_config.flags[led_idx];
-            raw_hid_buffer[data_idx + 4] = g_openrgb_direct_mode_colors[led_idx].r;
-            raw_hid_buffer[data_idx + 5] = g_openrgb_direct_mode_colors[led_idx].g;
-            raw_hid_buffer[data_idx + 6] = g_openrgb_direct_mode_colors[led_idx].b;
+            raw_hid_buffer[data_idx + 4] = g_hidrgb_colors[led_idx].r;
+            raw_hid_buffer[data_idx + 5] = g_hidrgb_colors[led_idx].g;
+            raw_hid_buffer[data_idx + 6] = g_hidrgb_colors[led_idx].b;
         }
 
         uint8_t row   = 0;
@@ -340,21 +341,13 @@ void openrgb_set_mode(uint8_t *data) {
         return;
     }
 
-    dprintf("set mode :%d\n",mode);
-
-
     if (save == 1) {
         rgb_matrix_mode(mode);
         rgb_matrix_set_speed(speed);
         rgb_matrix_sethsv(h, s, v);
     }
     else {
-        // if (mode == 0){
-        //     rgb_matrix_mode_noeeprom(RGB_MATRIX_OPENRGB_DIRECT);
-        // }else{
-            rgb_matrix_mode_noeeprom(mode);
-        // }
-
+        rgb_matrix_mode_noeeprom(mode);
         rgb_matrix_set_speed_noeeprom(speed);
         rgb_matrix_sethsv_noeeprom(h, s, v);
     }
@@ -374,9 +367,9 @@ void openrgb_direct_mode_set_single_led(uint8_t *data) {
         return;
     }
 
-    g_openrgb_direct_mode_colors[led].r = r;
-    g_openrgb_direct_mode_colors[led].g = g;
-    g_openrgb_direct_mode_colors[led].b = b;
+    g_hidrgb_colors[led].r = r;
+    g_hidrgb_colors[led].g = g;
+    g_hidrgb_colors[led].b = b;
 
     raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
@@ -387,8 +380,8 @@ void openrgb_direct_mode_set_leds(uint8_t *data) {
         const uint8_t data_idx  = i * 4;
         const uint8_t color_idx = data[data_idx + 2];
 
-        g_openrgb_direct_mode_colors[color_idx].r = data[data_idx + 3];
-        g_openrgb_direct_mode_colors[color_idx].g = data[data_idx + 4];
-        g_openrgb_direct_mode_colors[color_idx].b = data[data_idx + 5];
+        g_hidrgb_colors[color_idx].r = data[data_idx + 3];
+        g_hidrgb_colors[color_idx].g = data[data_idx + 4];
+        g_hidrgb_colors[color_idx].b = data[data_idx + 5];
     }
 }

@@ -1,8 +1,9 @@
-#ifdef OPENRGB_ENABLE
-RGB_MATRIX_EFFECT(OPENRGB_DIRECT)
+#ifdef HIDRGB_ENABLE
+RGB_MATRIX_EFFECT(HIDRGB)
 #   ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
-bool OPENRGB_DIRECT(effect_params_t* params) {
+bool HIDRGB(effect_params_t* params)
+{
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
 
     for (uint8_t i = led_min; i < led_max; i++) {
@@ -10,20 +11,22 @@ bool OPENRGB_DIRECT(effect_params_t* params) {
         float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
         rgb_matrix_set_color(
             i,
-            brightness * g_openrgb_direct_mode_colors[i].r,
-            brightness * g_openrgb_direct_mode_colors[i].g,
-            brightness * g_openrgb_direct_mode_colors[i].b
+            brightness * g_hidrgb_colors[i].r,
+            brightness * g_hidrgb_colors[i].g,
+            brightness * g_hidrgb_colors[i].b
         );
         #else
         rgb_matrix_set_color(
             i,
-            g_openrgb_direct_mode_colors[i].r,
-            g_openrgb_direct_mode_colors[i].g,
-            g_openrgb_direct_mode_colors[i].b
+            g_hidrgb_colors[i].r,
+            g_hidrgb_colors[i].g,
+            g_hidrgb_colors[i].b
         );
         #endif
     }
+
     return rgb_matrix_check_finished_leds(led_max);
 }
-#   endif
+
+#   endif // RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 #endif

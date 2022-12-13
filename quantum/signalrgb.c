@@ -9,7 +9,6 @@
 #include "string.h"
 
 static uint8_t packet[32];
-RGB                  g_signalrgb_mode_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={0,0,0}};
 
 void get_qmk_version(void) //Grab the QMK Version the board's firmware is built off of
 {
@@ -59,9 +58,9 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
       uint8_t  g = data[offset + 1];
       uint8_t  b = data[offset + 2];
 
-      g_signalrgb_mode_colors[index + i].r = r;
-      g_signalrgb_mode_colors[index + i].g = g;
-      g_signalrgb_mode_colors[index + i].b = b;
+      g_hidrgb_colors[index + i].r = r;
+      g_hidrgb_colors[index + i].g = g;
+      g_hidrgb_colors[index + i].b = b;
 
       //rgb_matrix_set_color(index + i, r, g, b);
      }
@@ -69,7 +68,7 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
 
 void signalrgb_mode_enable(void)
 {
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_SIGNALRGB); //Set RGB Matrix to SignalRGB Compatible Mode
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_HIDRGB); //Set RGB Matrix to SignalRGB Compatible Mode
 }
 
 void signalrgb_mode_disable(void)

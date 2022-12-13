@@ -39,7 +39,7 @@ enum openrgb_responses {
     OPENRGB_END_OF_MESSAGE = 100,
 };
 
-extern RGB g_openrgb_direct_mode_colors[DRIVER_LED_TOTAL];
+// extern RGB g_openrgb_direct_mode_colors[DRIVER_LED_TOTAL];
 bool openrgb_command_handler(uint8_t *data, uint8_t length);
 void openrgb_get_protocol_version(void);
 void openrgb_get_qmk_version(void);

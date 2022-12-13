@@ -268,3 +268,7 @@ extern last_hit_t g_last_hit_tracker;
 #ifdef RGB_MATRIX_FRAMEBUFFER_EFFECTS
 extern uint8_t g_rgb_frame_buffer[MATRIX_ROWS][MATRIX_COLS];
 #endif
+
+#ifdef HIDRGB_ENABLE
+extern RGB g_hidrgb_colors[DRIVER_LED_TOTAL];
+#endif
