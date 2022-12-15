@@ -222,6 +222,10 @@ extern layer_state_t layer_state;
 #    include "openrgb.h"
 #endif
 
+#ifdef HIDRGB_ENABLE
+#    include "hidrgb.h"
+#endif
+
 #ifdef WPM_ENABLE
 #    include "wpm.h"
 #endif

@@ -21,6 +21,7 @@
 #include "version.h"
 #include "quantum.h"
 #include "openrgb.h"
+#include "hidrgb.h"
 #include "raw_hid.h"
 #include "string.h"
 #include <color.h>
@@ -341,6 +342,8 @@ void openrgb_set_mode(uint8_t *data) {
         return;
     }
 
+    hidrgb_set_mode(HID_MODE_OPENRGB);
+
     if (save == 1) {
         rgb_matrix_mode(mode);
         rgb_matrix_set_speed(speed);
@@ -355,6 +358,12 @@ void openrgb_set_mode(uint8_t *data) {
     raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 void openrgb_direct_mode_set_single_led(uint8_t *data) {
+    uint8_t mode = hidrgb_get_mode();
+    if (mode != HID_MODE_OPENRGB) {
+        raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_FAILURE;
+        return;
+    }
+
     const uint8_t led = data[1];
     const uint8_t r   = data[2];
     const uint8_t g   = data[3];
@@ -374,6 +383,12 @@ void openrgb_direct_mode_set_single_led(uint8_t *data) {
     raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 void openrgb_direct_mode_set_leds(uint8_t *data) {
+    uint8_t mode = hidrgb_get_mode();
+
+    if (mode != HID_MODE_OPENRGB) {
+        return;
+    }
+
     const uint8_t number_leds = data[1];
 
     for (uint8_t i = 0; i < number_leds; i++) {

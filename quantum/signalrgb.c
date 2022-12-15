@@ -42,6 +42,10 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
 
     uint8_t index = data[1];
     uint8_t numberofleds = data[2];
+    uint8_t mode = hidrgb_get_mode();
+    if (mode != HID_MODE_SIGNALRGB) {
+        return;
+    }
 
   //  float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
 
@@ -69,6 +73,7 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
 void signalrgb_mode_enable(void)
 {
     rgb_matrix_mode_noeeprom(RGB_MATRIX_HIDRGB); //Set RGB Matrix to SignalRGB Compatible Mode
+    hidrgb_set_mode(HID_MODE_SIGNALRGB);
 }
 
 void signalrgb_mode_disable(void)

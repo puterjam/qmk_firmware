@@ -80,8 +80,8 @@
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #define RGB_MATRIX_KEYPRESSES
 
+/* HIDRGB & OPENRGB config */
 #define HIDRGB_USE_UNIVERSAL_BRIGHTNESS
-
 #define OPENRGB_DEFAULT_KEYMAP_ID 2 //read windows keymap for openrgb
 
 /* Enable receive custom command from host */

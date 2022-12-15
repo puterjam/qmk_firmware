@@ -15,7 +15,28 @@
  */
 
 #include "quantum.h"
+
+#include "hidrgb.h"
+
 #include "raw_hid.h"
+
+RGB g_hidrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={0,0,0}};
+
+// internals
+static uint8_t         hidrgb_mode     = HID_MODE_OPENRGB;
+
+
+void hidrgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue){
+
+}
+
+void hidrgb_set_mode(int mode){
+    hidrgb_mode = mode;
+}
+
+uint8_t hidrgb_get_mode(void){
+    return hidrgb_mode;
+}
 
 void rgb_hid_receive(uint8_t *data, uint8_t length) {
     bool send = false;

@@ -119,9 +119,6 @@ uint8_t g_rgb_frame_buffer[MATRIX_ROWS][MATRIX_COLS] = {{0}};
 #ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
 last_hit_t g_last_hit_tracker;
 #endif // RGB_MATRIX_KEYREACTIVE_ENABLED
-#ifdef HIDRGB_ENABLE
-RGB g_hidrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={0,0,0}};
-#endif
 
 // internals
 static bool            suspend_state     = false;

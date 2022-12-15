@@ -38,4 +38,3 @@
 
 
 #define RGB_MATRIX_CENTER { 84, 24 }
-
