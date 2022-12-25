@@ -7,6 +7,7 @@
 #include "signalrgb.h"
 #include "color.h"
 #include "string.h"
+#include "hidrgb.h"
 
 static uint8_t packet[32];
 
@@ -42,6 +43,7 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
 
     uint8_t index = data[1];
     uint8_t numberofleds = data[2];
+
     uint8_t mode = hidrgb_get_mode();
     if (mode != HID_MODE_SIGNALRGB) {
         return;
@@ -62,9 +64,10 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
       uint8_t  g = data[offset + 1];
       uint8_t  b = data[offset + 2];
 
-      g_hidrgb_colors[index + i].r = r;
-      g_hidrgb_colors[index + i].g = g;
-      g_hidrgb_colors[index + i].b = b;
+      hidrgb_set_color(index + i,r,g,b);
+    //   g_hidrgb_colors[index + i].r = r;
+    //   g_hidrgb_colors[index + i].g = g;
+    //   g_hidrgb_colors[index + i].b = b;
 
       //rgb_matrix_set_color(index + i, r, g, b);
      }
@@ -72,13 +75,20 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
 
 void signalrgb_mode_enable(void)
 {
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_HIDRGB); //Set RGB Matrix to SignalRGB Compatible Mode
     hidrgb_set_mode(HID_MODE_SIGNALRGB);
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_HIDRGB); //Set RGB Matrix to SignalRGB Compatible Mode
 }
 
 void signalrgb_mode_disable(void)
 {
+    hidrgb_set_mode(HID_MODE_OPENRGB); //switch to OpenRGB mode
+#ifdef OPENRGB_ENABLE
+    hidrgb_reload_openrgb_colors();
+    #else
     rgb_matrix_reload_from_eeprom(); //Reloading last effect from eeprom
+#endif
+
+
 }
 
 void signalrgb_total_leds(void)//Grab total number of leds that a board has.

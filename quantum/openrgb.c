@@ -32,20 +32,6 @@
 #    define OPENRGB_DEFAULT_KEYMAP_ID 0 // default keyamp id，read keymap by id from u keyboard
 #endif
 
-// #if !defined(OPENRGB_DIRECT_MODE_STARTUP_RED)
-// #    define OPENRGB_DIRECT_MODE_STARTUP_RED 40
-// #endif
-
-// #if !defined(OPENRGB_DIRECT_MODE_STARTUP_GREEN)
-// #    define OPENRGB_DIRECT_MODE_STARTUP_GREEN 40
-// #endif
-
-// #if !defined(OPENRGB_DIRECT_MODE_STARTUP_BLUE)
-// #    define OPENRGB_DIRECT_MODE_STARTUP_BLUE 240
-// #endif
-
-// RGB g_hidrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] = {OPENRGB_DIRECT_MODE_STARTUP_GREEN, OPENRGB_DIRECT_MODE_STARTUP_RED, OPENRGB_DIRECT_MODE_STARTUP_BLUE}};
-
 static const uint8_t openrgb_rgb_matrix_effects_indexes[]           = {
     1,  2,
 
@@ -277,6 +263,7 @@ void openrgb_get_mode_info(void) {
 void openrgb_get_led_info(uint8_t *data) {
     const uint8_t first_led   = data[1];
     const uint8_t number_leds = data[2];
+    const RGB* openrgb_colors = hidrgb_get_openrgb_colors();
 
     raw_hid_buffer[0] = OPENRGB_GET_LED_INFO;
 
@@ -290,9 +277,10 @@ void openrgb_get_led_info(uint8_t *data) {
             raw_hid_buffer[data_idx + 1] = g_led_config.point[led_idx].x;
             raw_hid_buffer[data_idx + 2] = g_led_config.point[led_idx].y;
             raw_hid_buffer[data_idx + 3] = g_led_config.flags[led_idx];
-            raw_hid_buffer[data_idx + 4] = g_hidrgb_colors[led_idx].r;
-            raw_hid_buffer[data_idx + 5] = g_hidrgb_colors[led_idx].g;
-            raw_hid_buffer[data_idx + 6] = g_hidrgb_colors[led_idx].b;
+
+            raw_hid_buffer[data_idx + 4] = openrgb_colors[led_idx].r;
+            raw_hid_buffer[data_idx + 5] = openrgb_colors[led_idx].g;
+            raw_hid_buffer[data_idx + 6] = openrgb_colors[led_idx].b;
         }
 
         uint8_t row   = 0;
@@ -376,10 +364,11 @@ void openrgb_direct_mode_set_single_led(uint8_t *data) {
         return;
     }
 
-    g_hidrgb_colors[led].r = r;
-    g_hidrgb_colors[led].g = g;
-    g_hidrgb_colors[led].b = b;
+    // g_hidrgb_colors[led].r = r;
+    // g_hidrgb_colors[led].g = g;
+    // g_hidrgb_colors[led].b = b;
 
+    hidrgb_set_color(led,r,g,b);
     raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 void openrgb_direct_mode_set_leds(uint8_t *data) {
@@ -395,8 +384,10 @@ void openrgb_direct_mode_set_leds(uint8_t *data) {
         const uint8_t data_idx  = i * 4;
         const uint8_t color_idx = data[data_idx + 2];
 
-        g_hidrgb_colors[color_idx].r = data[data_idx + 3];
-        g_hidrgb_colors[color_idx].g = data[data_idx + 4];
-        g_hidrgb_colors[color_idx].b = data[data_idx + 5];
+        // g_hidrgb_colors[color_idx].r = data[data_idx + 3];
+        // g_hidrgb_colors[color_idx].g = data[data_idx + 4];
+        // g_hidrgb_colors[color_idx].b = data[data_idx + 5];
+
+        hidrgb_set_color(color_idx,data[data_idx + 3],data[data_idx + 4],data[data_idx + 5]);
     }
 }
