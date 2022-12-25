@@ -24,12 +24,14 @@ enum hidrgb_mode {
     HID_MODE_SIGNALRGB,
 };
 
-// extern RGB g_hidrgb_colors[DRIVER_LED_TOTAL];
+extern uint8_t g_repaint_led;
 
 void hidrgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue); //set one led color
 void hidrgb_set_mode(int mode); //set hidrgb software mode, HID_MODE_OPENRGB or HID_MODE_SIGNALRGB
 uint8_t hidrgb_get_mode(void); //get software mode
 
 void hidrgb_reload_openrgb_colors(void); //reload openrgb colors
+void hidrgb_reload_openrgb_anim(void);//reload openrgb colors in animation
 RGB* hidrgb_get_openrgb_colors(void); //get openrgb colors
+RGB hidrgb_get_openrgb_color(int index);
 

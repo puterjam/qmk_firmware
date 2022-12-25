@@ -23,54 +23,62 @@
 #endif
 
 #if !defined(HIDRGB_OPENRGB_STARTUP_GREEN)
-#    define HIDRGB_OPENRGB_STARTUP_GREEN 40
+#    define HIDRGB_OPENRGB_STARTUP_GREEN 255
 #endif
 
 #if !defined(HIDRGB_OPENRGB_STARTUP_BLUE)
-#    define HIDRGB_OPENRGB_STARTUP_BLUE 240
+#    define HIDRGB_OPENRGB_STARTUP_BLUE 140
 #endif
+
+uint8_t g_repaint_led = 0;
 
 // internals
 static uint8_t         hidrgb_mode     = HID_MODE_OPENRGB;
-static RGB last_openrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={HIDRGB_OPENRGB_STARTUP_RED,HIDRGB_OPENRGB_STARTUP_GREEN,HIDRGB_OPENRGB_STARTUP_BLUE}};
+static RGB last_openrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={HIDRGB_OPENRGB_STARTUP_GREEN, HIDRGB_OPENRGB_STARTUP_RED, HIDRGB_OPENRGB_STARTUP_BLUE}};
 
 //static RGB last_openrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={0,0,0}};
 //static RGB last_signalrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={0,0,0}};
 
 //set one matrix led color
 void hidrgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue){
-#ifdef HIDRGB_USE_UNIVERSAL_BRIGHTNESS
-    float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
-    rgb_matrix_set_color(index,brightness * red,brightness * green,brightness * blue);
-    #else
-    rgb_matrix_set_color(index, red , green, blue);
-#endif
+    if (DRIVER_LED_TOTAL <= g_repaint_led){
+#   ifdef HIDRGB_USE_UNIVERSAL_BRIGHTNESS
+        float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
+        rgb_matrix_set_color(index,brightness * red,brightness * green,brightness * blue);
+        #else
+        rgb_matrix_set_color(index, red , green, blue);
+#   endif
+    }
 
     //cache openRGB colors
-    uint8_t mode = hidrgb_get_mode();
-    if (mode == HID_MODE_OPENRGB) {
+    if (hidrgb_get_mode() == HID_MODE_OPENRGB) {
         last_openrgb_colors[index].r = red;
         last_openrgb_colors[index].g = green;
         last_openrgb_colors[index].b = blue;
     }
-
 }
 
  //set openrgb colors
 void hidrgb_reload_openrgb_colors(void){
-    uint8_t mode = hidrgb_get_mode();
-
-    if (mode == HID_MODE_OPENRGB) {
-    for (uint8_t i = 0; i < DRIVER_LED_TOTAL; i++) {
+    if (hidrgb_get_mode() == HID_MODE_OPENRGB) {
+        for (uint8_t i = 0; i < DRIVER_LED_TOTAL; i++) {
             hidrgb_set_color(i,last_openrgb_colors[i].r,last_openrgb_colors[i].g,last_openrgb_colors[i].b);
-
         }
     }
+}
+
+void hidrgb_reload_openrgb_anim(void){
+    g_repaint_led = 0;
+    rgb_matrix_set_color_all(0,0,0);
 }
 
  //get openrgb colors
 RGB* hidrgb_get_openrgb_colors(void){
     return last_openrgb_colors;
+}
+
+RGB hidrgb_get_openrgb_color(int index){
+    return last_openrgb_colors[index];
 }
 
 //set hidrgb software mode, HID_MODE_OPENRGB or HID_MODE_SIGNALRGB

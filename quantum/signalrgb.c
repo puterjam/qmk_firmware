@@ -83,7 +83,7 @@ void signalrgb_mode_disable(void)
 {
     hidrgb_set_mode(HID_MODE_OPENRGB); //switch to OpenRGB mode
 #ifdef OPENRGB_ENABLE
-    hidrgb_reload_openrgb_colors();
+    hidrgb_reload_openrgb_anim();
     #else
     rgb_matrix_reload_from_eeprom(); //Reloading last effect from eeprom
 #endif
