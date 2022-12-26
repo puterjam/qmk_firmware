@@ -1,4 +1,4 @@
-/* Copyright 2022 puterjam<git@zvecr.com>
+/* Copyright 2022 puterjam<puterjam@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,10 @@
 #    define HIDRGB_OPENRGB_STARTUP_BLUE 140
 #endif
 
-uint8_t g_repaint_led = 0;
+
+// global
+uint16_t g_hidrgb_timer = 0;
+bool g_hidrgb_is_loop = false;
 
 // internals
 static uint8_t         hidrgb_mode     = HID_MODE_OPENRGB;
@@ -41,13 +44,8 @@ static RGB last_openrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1]
 
 //set one matrix led color
 void hidrgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue){
-    if (DRIVER_LED_TOTAL <= g_repaint_led){
-#   ifdef HIDRGB_USE_UNIVERSAL_BRIGHTNESS
-        float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
-        rgb_matrix_set_color(index,brightness * red,brightness * green,brightness * blue);
-        #else
-        rgb_matrix_set_color(index, red , green, blue);
-#   endif
+    if (rgb_matrix_get_mode() != RGB_MATRIX_GEEKRGB) { // if matrix mode not signalrgb, do not streaming led.
+        return;
     }
 
     //cache openRGB colors
@@ -55,6 +53,13 @@ void hidrgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue){
         last_openrgb_colors[index].r = red;
         last_openrgb_colors[index].g = green;
         last_openrgb_colors[index].b = blue;
+    }else{
+#   ifdef HIDRGB_USE_UNIVERSAL_BRIGHTNESS
+        float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
+        rgb_matrix_set_color(index,brightness * red,brightness * green,brightness * blue);
+        #else
+        rgb_matrix_set_color(index, red , green, blue);
+#   endif
     }
 }
 
@@ -68,7 +73,7 @@ void hidrgb_reload_openrgb_colors(void){
 }
 
 void hidrgb_reload_openrgb_anim(void){
-    g_repaint_led = 0;
+    if (!g_hidrgb_is_loop) g_hidrgb_timer = 0;
     rgb_matrix_set_color_all(0,0,0);
 }
 

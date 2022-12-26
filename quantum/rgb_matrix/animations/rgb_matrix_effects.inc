@@ -38,4 +38,4 @@
 #include "pixel_rain_anim.h"
 #include "pixel_flow_anim.h"
 #include "pixel_fractal_anim.h"
-#include "hidrgb_anim.h"
+#include "geek_rgb_anim.h"

@@ -78,7 +78,7 @@ typedef struct {
     USB_Descriptor_Endpoint_t  Raw_OUTEndpoint;
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
     USB_Descriptor_Interface_t HIDRGB_Interface;
     USB_HID_Descriptor_HID_t   HIDRGB_HID;
     USB_Descriptor_Endpoint_t  HIDRGB_INEndpoint;
@@ -172,7 +172,7 @@ enum usb_interfaces {
     RAW_INTERFACE,
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
     HIDRGB_INTERFACE,
 #endif
 
@@ -237,7 +237,7 @@ enum usb_endpoints {
 #    endif
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
     HIDRGB_IN_EPNUM = NEXT_EPNUM,
 #    if USB_ENDPOINTS_ARE_REORDERABLE
 #        define HIDRGB_OUT_EPNUM HIDRGB_IN_EPNUM

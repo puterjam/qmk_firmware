@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HIDRGB_ENABLE
+#ifndef GEEKRGB_ENABLE
 #    error "HID RGB Communication is not enabled" //This should be impossible to run into afaik. Common_features ensures RAWHID is enabled.
 #endif
 
@@ -343,14 +343,14 @@ void openrgb_set_mode(uint8_t *data) {
         rgb_matrix_sethsv_noeeprom(h, s, v);
     }
 
-    if (rgb_matrix_get_mode() == RGB_MATRIX_HIDRGB) { // if matrix mode not signalrgb, do not streaming led.
+    if (rgb_matrix_get_mode() == RGB_MATRIX_GEEKRGB) { // if matrix mode not signalrgb, do not streaming led.
         hidrgb_reload_openrgb_anim();
     }
 
     raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 void openrgb_direct_mode_set_single_led(uint8_t *data) {
-    if (hidrgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_HIDRGB) {
+    if (hidrgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_GEEKRGB) {
         raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_FAILURE;
         return;
     }
@@ -376,7 +376,7 @@ void openrgb_direct_mode_set_single_led(uint8_t *data) {
     raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 void openrgb_direct_mode_set_leds(uint8_t *data) {
-    if (hidrgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_HIDRGB) {
+    if (hidrgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_GEEKRGB) {
         return;
     }
 

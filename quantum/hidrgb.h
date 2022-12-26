@@ -24,7 +24,8 @@ enum hidrgb_mode {
     HID_MODE_SIGNALRGB,
 };
 
-extern uint8_t g_repaint_led;
+extern uint16_t g_hidrgb_timer;
+extern bool g_hidrgb_is_loop;
 
 void hidrgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue); //set one led color
 void hidrgb_set_mode(int mode); //set hidrgb software mode, HID_MODE_OPENRGB or HID_MODE_SIGNALRGB

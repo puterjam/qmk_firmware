@@ -1,4 +1,4 @@
-#ifndef HIDRGB_ENABLE
+#ifndef GEEKRGB_ENABLE
 #    error "HID RGB Communication is not enabled" //This should be impossible to run into afaik. Common_features ensures RAWHID is enabled.
 #endif
 
@@ -44,8 +44,7 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
     uint8_t index = data[1];
     uint8_t numberofleds = data[2];
 
-    uint8_t mode = hidrgb_get_mode();
-    if (mode != HID_MODE_SIGNALRGB) {
+    if (hidrgb_get_mode() != HID_MODE_SIGNALRGB) {
         return;
     }
 
@@ -76,7 +75,7 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
 void signalrgb_mode_enable(void)
 {
     hidrgb_set_mode(HID_MODE_SIGNALRGB);
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_HIDRGB); //Set RGB Matrix to SignalRGB Compatible Mode
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_GEEKRGB); //Set RGB Matrix to SignalRGB Compatible Mode
 }
 
 void signalrgb_mode_disable(void)

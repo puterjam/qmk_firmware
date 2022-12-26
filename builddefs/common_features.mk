@@ -613,20 +613,20 @@ ifeq ($(strip $(LED_TABLES)), yes)
 endif
 
 ifeq ($(strip $(SIGNALRGB_SUPPORT_ENABLE)), yes)
-    HIDRGB_ENABLE := yes
+    GEEKRGB_ENABLE := yes
     SRC += $(QUANTUM_DIR)/signalrgb.c
     OPT_DEFS += -DSIGNALRGB_SUPPORT_ENABLE
 endif
 
  ifeq ($(strip $(OPENRGB_ENABLE)), yes)
-     HIDRGB_ENABLE := yes
+     GEEKRGB_ENABLE := yes
      SRC += $(QUANTUM_DIR)/openrgb.c
      OPT_DEFS += -DOPENRGB_ENABLE
  endif
 
-ifeq ($(strip $(HIDRGB_ENABLE)), yes)
+ifeq ($(strip $(GEEKRGB_ENABLE)), yes)
     SRC += $(QUANTUM_DIR)/hidrgb.c
-    OPT_DEFS += -DHIDRGB_ENABLE
+    OPT_DEFS += -DGEEKRGB_ENABLE
 endif
 
 ifeq ($(strip $(VIA_ENABLE)), yes)

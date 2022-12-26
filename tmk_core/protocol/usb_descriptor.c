@@ -338,7 +338,7 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM RawReport[] = {
 };
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
 const USB_Descriptor_HIDReport_Datatype_t PROGMEM HIDRGBReport[] = {
     HID_RI_USAGE_PAGE(16, HIDRGB_USAGE_PAGE), // Vendor Defined
     HID_RI_USAGE(8, HIDRGB_USAGE_ID),         // Vendor Defined
@@ -594,7 +594,7 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor = {
     },
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
     .HIDRGB_Interface = {
         .Header = {
             .Size               = sizeof(USB_Descriptor_Interface_t),
@@ -1235,7 +1235,7 @@ uint16_t get_usb_descriptor(const uint16_t wValue, const uint16_t wIndex, const 
                     break;
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
                 case HIDRGB_INTERFACE:
                     Address = &ConfigurationDescriptor.HIDRGB_HID;
                     Size    = sizeof(USB_HID_Descriptor_HID_t);
@@ -1300,7 +1300,7 @@ uint16_t get_usb_descriptor(const uint16_t wValue, const uint16_t wIndex, const 
                     break;
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
                 case HIDRGB_INTERFACE:
                     Address = &HIDRGBReport;
                     Size    = sizeof(HIDRGBReport);

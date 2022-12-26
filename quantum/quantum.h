@@ -222,7 +222,7 @@ extern layer_state_t layer_state;
 #    include "openrgb.h"
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
 #    include "hidrgb.h"
 #endif
 
