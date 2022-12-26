@@ -7,7 +7,7 @@
 #include "signalrgb.h"
 #include "color.h"
 #include "string.h"
-#include "hidrgb.h"
+#include "geekrgb.h"
 
 static uint8_t packet[32];
 
@@ -64,11 +64,6 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
       uint8_t  b = data[offset + 2];
 
       hidrgb_set_color(index + i,r,g,b);
-    //   g_hidrgb_colors[index + i].r = r;
-    //   g_hidrgb_colors[index + i].g = g;
-    //   g_hidrgb_colors[index + i].b = b;
-
-      //rgb_matrix_set_color(index + i, r, g, b);
      }
 }
 

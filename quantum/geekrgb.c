@@ -15,29 +15,29 @@
  */
 
 #include "quantum.h"
-#include "hidrgb.h"
+#include "geekrgb.h"
 #include "raw_hid.h"
 
-#if !defined(HIDRGB_OPENRGB_STARTUP_RED)
-#    define HIDRGB_OPENRGB_STARTUP_RED 40
+#if !defined(GEEKRGB_STARTUP_RED)
+#    define GEEKRGB_STARTUP_RED 40
 #endif
 
-#if !defined(HIDRGB_OPENRGB_STARTUP_GREEN)
-#    define HIDRGB_OPENRGB_STARTUP_GREEN 255
+#if !defined(GEEKRGB_STARTUP_GREEN)
+#    define GEEKRGB_STARTUP_GREEN 255
 #endif
 
-#if !defined(HIDRGB_OPENRGB_STARTUP_BLUE)
-#    define HIDRGB_OPENRGB_STARTUP_BLUE 140
+#if !defined(GEEKRGB_STARTUP_BLUE)
+#    define GEEKRGB_STARTUP_BLUE 140
 #endif
 
 
 // global
-uint16_t g_hidrgb_timer = 0;
-bool g_hidrgb_is_loop = false;
+uint16_t g_geekrgb_timer = 0;
+bool g_geekrgb_anim_playing = false;
 
 // internals
 static uint8_t         hidrgb_mode     = HID_MODE_OPENRGB;
-static RGB last_openrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={HIDRGB_OPENRGB_STARTUP_GREEN, HIDRGB_OPENRGB_STARTUP_RED, HIDRGB_OPENRGB_STARTUP_BLUE}};
+static RGB last_openrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={GEEKRGB_STARTUP_GREEN, GEEKRGB_STARTUP_RED, GEEKRGB_STARTUP_BLUE}};
 
 //static RGB last_openrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={0,0,0}};
 //static RGB last_signalrgb_colors[DRIVER_LED_TOTAL] = {[0 ... DRIVER_LED_TOTAL - 1] ={0,0,0}};
@@ -54,7 +54,7 @@ void hidrgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue){
         last_openrgb_colors[index].g = green;
         last_openrgb_colors[index].b = blue;
     }else{
-#   ifdef HIDRGB_USE_UNIVERSAL_BRIGHTNESS
+#   ifdef GEEKRGB_USE_UNIVERSAL_BRIGHTNESS
         float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
         rgb_matrix_set_color(index,brightness * red,brightness * green,brightness * blue);
         #else
@@ -73,7 +73,7 @@ void hidrgb_reload_openrgb_colors(void){
 }
 
 void hidrgb_reload_openrgb_anim(void){
-    if (!g_hidrgb_is_loop) g_hidrgb_timer = 0;
+    if (!g_geekrgb_anim_playing) g_geekrgb_timer = 0;
     rgb_matrix_set_color_all(0,0,0);
 }
 

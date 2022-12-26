@@ -2,15 +2,15 @@
 RGB_MATRIX_EFFECT(GEEKRGB)
 #   ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
-#if !defined(HIDRGB_LOOP_ANIM_SPD)
-#    define HIDRGB_LOOP_ANIM_SPD 255
+#if !defined(GEEKRGB_WELCOME_ANIM_SPD)
+#    define GEEKRGB_WELCOME_ANIM_SPD 255
 #endif
 
 
 static void set_openrgb_color(uint8_t led_index, uint8_t val){
     RGB rgb = hidrgb_get_openrgb_color(led_index);
 
-#   ifdef HIDRGB_USE_UNIVERSAL_BRIGHTNESS
+#   ifdef GEEKRGB_USE_UNIVERSAL_BRIGHTNESS
     float brightness = (float) val / UINT8_MAX;
     rgb_matrix_set_color(led_index, rgb.r * brightness, rgb.g * brightness, rgb.b * brightness);
         #else
@@ -25,13 +25,13 @@ bool GEEKRGB(effect_params_t* params){
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
 
     void set_openrgb_colors(effect_params_t * params) {
-        uint8_t time   = scale16by8(g_hidrgb_timer, HIDRGB_LOOP_ANIM_SPD); //FIXED SPEED
+        uint8_t time   = scale16by8(g_geekrgb_timer, GEEKRGB_WELCOME_ANIM_SPD); //FIXED SPEED
         HSV hsv        = rgb_matrix_config.hsv;
-        g_hidrgb_is_loop = (time != UINT8_MAX);
+        g_geekrgb_anim_playing = (time != UINT8_MAX);
 
         for (uint8_t i = led_min; i < led_max; i++) {
             RGB_MATRIX_TEST_LED_FLAGS();
-            if (g_hidrgb_is_loop) { //play loop loading animation
+            if (g_geekrgb_anim_playing) { //play loop loading animation
                 int16_t dx   = g_led_config.point[i].x - k_rgb_matrix_center.x;
                 int16_t dy   = g_led_config.point[i].y - k_rgb_matrix_center.y;
                 hsv.v = 0;
@@ -46,7 +46,7 @@ bool GEEKRGB(effect_params_t* params){
             set_openrgb_color(i, hsv.v);
         }
 
-        if (g_hidrgb_is_loop) g_hidrgb_timer++; //tick counter
+        if (g_geekrgb_anim_playing) g_geekrgb_timer++; //tick counter
     }
 
     if (hidrgb_get_mode() == HID_MODE_OPENRGB) {

@@ -21,7 +21,7 @@
 #include "version.h"
 #include "quantum.h"
 #include "openrgb.h"
-#include "hidrgb.h"
+#include "geekrgb.h"
 #include "raw_hid.h"
 #include "string.h"
 #include <color.h>
@@ -367,10 +367,6 @@ void openrgb_direct_mode_set_single_led(uint8_t *data) {
         return;
     }
 
-    // g_hidrgb_colors[led].r = r;
-    // g_hidrgb_colors[led].g = g;
-    // g_hidrgb_colors[led].b = b;
-
     hidrgb_set_color(led,r,g,b);
 
     raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
@@ -385,10 +381,6 @@ void openrgb_direct_mode_set_leds(uint8_t *data) {
     for (uint8_t i = 0; i < number_leds; i++) {
         const uint8_t data_idx  = i * 4;
         const uint8_t color_idx = data[data_idx + 2];
-
-        // g_hidrgb_colors[color_idx].r = data[data_idx + 3];
-        // g_hidrgb_colors[color_idx].g = data[data_idx + 4];
-        // g_hidrgb_colors[color_idx].b = data[data_idx + 5];
 
         hidrgb_set_color(color_idx,data[data_idx + 3],data[data_idx + 4],data[data_idx + 5]);
     }

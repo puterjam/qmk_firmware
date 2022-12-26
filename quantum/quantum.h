@@ -223,7 +223,7 @@ extern layer_state_t layer_state;
 #endif
 
 #ifdef GEEKRGB_ENABLE
-#    include "hidrgb.h"
+#    include "geekrgb.h"
 #endif
 
 #ifdef WPM_ENABLE
