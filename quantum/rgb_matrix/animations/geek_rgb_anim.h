@@ -8,7 +8,7 @@ RGB_MATRIX_EFFECT(GEEKRGB)
 
 
 static void set_openrgb_color(uint8_t led_index, uint8_t val){
-    RGB rgb = hidrgb_get_openrgb_color(led_index);
+    RGB rgb = geekrgb_get_openrgb_color(led_index);
 
 #   ifdef GEEKRGB_USE_UNIVERSAL_BRIGHTNESS
     float brightness = (float) val / UINT8_MAX;
@@ -49,7 +49,7 @@ bool GEEKRGB(effect_params_t* params){
         if (g_geekrgb_anim_playing) g_geekrgb_timer++; //tick counter
     }
 
-    if (hidrgb_get_mode() == HID_MODE_OPENRGB) {
+    if (geekrgb_get_mode() == HID_MODE_OPENRGB) {
         set_openrgb_colors(params);
     }
 

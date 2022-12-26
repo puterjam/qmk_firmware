@@ -263,7 +263,7 @@ void openrgb_get_mode_info(void) {
 void openrgb_get_led_info(uint8_t *data) {
     const uint8_t first_led   = data[1];
     const uint8_t number_leds = data[2];
-    const RGB* openrgb_colors = hidrgb_get_openrgb_colors();
+    const RGB* openrgb_colors = geekrgb_get_openrgb_colors();
 
     raw_hid_buffer[0] = OPENRGB_GET_LED_INFO;
 
@@ -330,7 +330,7 @@ void openrgb_set_mode(uint8_t *data) {
         return;
     }
 
-    hidrgb_set_mode(HID_MODE_OPENRGB);
+    geekrgb_set_mode(HID_MODE_OPENRGB);
 
     if (save == 1) {
         rgb_matrix_mode(mode);
@@ -344,13 +344,13 @@ void openrgb_set_mode(uint8_t *data) {
     }
 
     if (rgb_matrix_get_mode() == RGB_MATRIX_GEEKRGB) { // if matrix mode not signalrgb, do not streaming led.
-        hidrgb_reload_openrgb_anim();
+        geekrgb_reload_openrgb_anim();
     }
 
     raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 void openrgb_direct_mode_set_single_led(uint8_t *data) {
-    if (hidrgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_GEEKRGB) {
+    if (geekrgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_GEEKRGB) {
         raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_FAILURE;
         return;
     }
@@ -367,12 +367,12 @@ void openrgb_direct_mode_set_single_led(uint8_t *data) {
         return;
     }
 
-    hidrgb_set_color(led,r,g,b);
+    geekrgb_set_color(led,r,g,b);
 
     raw_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 void openrgb_direct_mode_set_leds(uint8_t *data) {
-    if (hidrgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_GEEKRGB) {
+    if (geekrgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_GEEKRGB) {
         return;
     }
 
@@ -382,6 +382,6 @@ void openrgb_direct_mode_set_leds(uint8_t *data) {
         const uint8_t data_idx  = i * 4;
         const uint8_t color_idx = data[data_idx + 2];
 
-        hidrgb_set_color(color_idx,data[data_idx + 3],data[data_idx + 4],data[data_idx + 5]);
+        geekrgb_set_color(color_idx,data[data_idx + 3],data[data_idx + 4],data[data_idx + 5]);
     }
 }

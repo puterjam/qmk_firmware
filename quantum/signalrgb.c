@@ -44,7 +44,7 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
     uint8_t index = data[1];
     uint8_t numberofleds = data[2];
 
-    if (hidrgb_get_mode() != HID_MODE_SIGNALRGB) {
+    if (geekrgb_get_mode() != HID_MODE_SIGNALRGB) {
         return;
     }
 
@@ -63,21 +63,21 @@ void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
       uint8_t  g = data[offset + 1];
       uint8_t  b = data[offset + 2];
 
-      hidrgb_set_color(index + i,r,g,b);
+      geekrgb_set_color(index + i,r,g,b);
      }
 }
 
 void signalrgb_mode_enable(void)
 {
-    hidrgb_set_mode(HID_MODE_SIGNALRGB);
+    geekrgb_set_mode(HID_MODE_SIGNALRGB);
     rgb_matrix_mode_noeeprom(RGB_MATRIX_GEEKRGB); //Set RGB Matrix to SignalRGB Compatible Mode
 }
 
 void signalrgb_mode_disable(void)
 {
-    hidrgb_set_mode(HID_MODE_OPENRGB); //switch to OpenRGB mode
+    geekrgb_set_mode(HID_MODE_OPENRGB); //switch to OpenRGB mode
 #ifdef OPENRGB_ENABLE
-    hidrgb_reload_openrgb_anim();
+    geekrgb_reload_openrgb_anim();
     #else
     rgb_matrix_reload_from_eeprom(); //Reloading last effect from eeprom
 #endif

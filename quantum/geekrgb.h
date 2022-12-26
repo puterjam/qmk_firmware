@@ -27,12 +27,12 @@ enum hidrgb_mode {
 extern uint16_t g_geekrgb_timer;
 extern bool g_geekrgb_anim_playing;
 
-void hidrgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue); //set one led color
-void hidrgb_set_mode(int mode); //set hidrgb software mode, HID_MODE_OPENRGB or HID_MODE_SIGNALRGB
-uint8_t hidrgb_get_mode(void); //get software mode
+void geekrgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue); //set one led color
+void geekrgb_set_mode(int mode); //set hidrgb software mode, HID_MODE_OPENRGB or HID_MODE_SIGNALRGB
+uint8_t geekrgb_get_mode(void); //get software mode
 
-void hidrgb_reload_openrgb_colors(void); //reload openrgb colors
-void hidrgb_reload_openrgb_anim(void);//reload openrgb colors in animation
-RGB* hidrgb_get_openrgb_colors(void); //get openrgb colors
-RGB hidrgb_get_openrgb_color(int index);
+void geekrgb_reload_openrgb_colors(void); //reload openrgb colors
+void geekrgb_reload_openrgb_anim(void);//reload openrgb colors in animation
+RGB* geekrgb_get_openrgb_colors(void); //get openrgb colors
+RGB geekrgb_get_openrgb_color(int index);
 
