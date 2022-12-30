@@ -86,7 +86,7 @@ extern keymap_config_t keymap_config;
 #    include "raw_hid.h"
 #endif
 
-#if (defined(HIDRGB_ENABLE) && !defined(RAW_ENABLE))
+#if (defined(GEEKRGB_ENABLE) && !defined(RAW_ENABLE))
 #    include "raw_hid.h"
 #endif
 
@@ -213,7 +213,7 @@ static void raw_hid_task(void) {
 }
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
 
 void rgb_hid_send(uint8_t *data, uint8_t length) {
     // TODO: implement variable size packet
@@ -547,7 +547,7 @@ void EVENT_USB_Device_ConfigurationChanged(void) {
     ConfigSuccess &= Endpoint_ConfigureEndpoint((RAW_OUT_EPNUM | ENDPOINT_DIR_OUT), EP_TYPE_INTERRUPT, RAW_EPSIZE, 1);
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
     ConfigSuccess &= Endpoint_ConfigureEndpoint((HIDRGB_IN_EPNUM | ENDPOINT_DIR_IN), EP_TYPE_INTERRUPT, HIDRGB_EPSIZE, 1);
     ConfigSuccess &= Endpoint_ConfigureEndpoint((HIDRGB_OUT_EPNUM | ENDPOINT_DIR_OUT), EP_TYPE_INTERRUPT, HIDRGB_EPSIZE, 1);
 #endif
@@ -1177,7 +1177,7 @@ void protocol_post_task(void) {
     raw_hid_task();
 #endif
 
-#ifdef HIDRGB_ENABLE
+#ifdef GEEKRGB_ENABLE
     hidrgb_hid_task();
 #endif
 

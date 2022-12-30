@@ -24,6 +24,4 @@
 #define COL2ROW 0
 #define ROW2COL 1
 
-#ifdef AUDIO_ENABLE
-#    include "song_list.h"
-#endif
+#include "song_list.h"

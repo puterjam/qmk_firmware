@@ -3,13 +3,13 @@
 enum signalrgb_commands
 {
     GET_QMK_VERSION = 0x21,
-    GET_PROTOCOL_VERSION = 0x22,
-    GET_UNIQUE_IDENTIFIER = 0x23,
-    STREAM_RGB_DATA = 0x24,
-    SET_SIGNALRGB_MODE_ENABLE = 0x25,
-    SET_SIGNALRGB_MODE_DISABLE = 0x26,
-    GET_TOTAL_LEDS = 0x27,
-    GET_FIRMWARE_TYPE = 0x28,
+    GET_PROTOCOL_VERSION,
+    GET_UNIQUE_IDENTIFIER,
+    STREAM_RGB_DATA,
+    SET_SIGNALRGB_MODE_ENABLE,
+    SET_SIGNALRGB_MODE_DISABLE,
+    GET_TOTAL_LEDS,
+    GET_FIRMWARE_TYPE,
 };
 
 enum signalrgb_responses //These are a bit clunky right now. Could use improvement.
@@ -27,10 +27,9 @@ enum signalrgb_responses //These are a bit clunky right now. Could use improveme
     DEVICE_ERROR_LEDS = 255, //Error code to show that there are more leds than a packet will allow.
 };
 
-extern RGB g_signalrgb_mode_colors[DRIVER_LED_TOTAL];
+// extern RGB g_signalrgb_mode_colors[DRIVER_LED_TOTAL];
 
 bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
-
 void get_qmk_version(void);
 void get_signalrgb_protocol_version(void);
 void get_unique_identifier(void);

@@ -25,21 +25,33 @@
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
 #define DEBOUNCE 3
 
-#define RGB_ENABLE_AFTER_TIMEOUT 0 // number of ticks to wait until disabling effects
-#define RGB_ENABLE_WHEN_USB_SUSPENDED // turn off effects when suspended
+// #define RGB_ENABLE_AFTER_TIMEOUT 0 // number of ticks to wait until disabling effects
 #define RGB_MATRIX_KEYPRESSES
-#define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+// #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+
 #define RGB_MATRIX_LED_PROCESS_LIMIT 4
 #define RGB_MATRIX_LED_FLUSH_LIMIT 26
-//#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR
-#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_CYCLE_ALL
+
+#ifdef GEEKRGB_ENABLE
+#   define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_GEEKRGB
+#else
+#   define RGB_MATRIX_STARTUP_MODE RGB_CYCLE_LEFT_RIGHT
+#endif
+
 #define RGB_MATRIX_STARTUP_SPD 40
-// #define RGB_MATRIX_STARTUP_HUE 200
-// #define RGB_MATRIX_STARTUP_SAT 200
-// #define RGB_MATRIX_STARTUP_VAL RGB_MATRIX_MAXIMUM_BRIGHTNESS / 2
+
+#ifdef RGB_MATRIX_ENABLE
+#    define RGB_DISABLE_WHEN_USB_SUSPENDED // Disable RGB lighting when PC is in suspend
+#    undef RGB_DISABLE_TIMEOUT
+#    define RGB_DISABLE_TIMEOUT 900000 // 15 minutes (15 * 60 * 1000ms)
+#endif
+
 #define DRIVER_ADDR_1 0b0110000
 #define DRIVER_COUNT 1
 
+// RGB Matrix Animation modes. Explicitly enabled
+// For full list of effects, see:
+// https://docs.qmk.fm/#/feature_rgb_matrix?id=rgb-matrix-effects
 // #define ENABLE_RGB_MATRIX_ALPHAS_MODS
 // #define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
 // #define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
@@ -55,7 +67,7 @@
 #define ENABLE_RGB_MATRIX_CYCLE_UP_DOWN
 #define ENABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
 #define ENABLE_RGB_MATRIX_CYCLE_OUT_IN
-#define ENABLE_RGB_MATRIX_CYCLE_OUT_IN_DUAL
+// #define ENABLE_RGB_MATRIX_CYCLE_OUT_IN_DUAL
 #define ENABLE_RGB_MATRIX_CYCLE_PINWHEEL
 #define ENABLE_RGB_MATRIX_CYCLE_SPIRAL
 #define ENABLE_RGB_MATRIX_DUAL_BEACON
@@ -86,9 +98,10 @@
 // #define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
 
 //new effects
-#define ENABLE_RGB_MATRIX_PIXEL_RAIN
+// #define ENABLE_RGB_MATRIX_PIXEL_RAIN
 // #define ENABLE_RGB_MATRIX_PIXEL_FLOW
 // #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
 
-#define HIDRGB_USE_UNIVERSAL_BRIGHTNESS //no use OPENRGB_DIRECT_MODE_USE_UNIVERSAL_BRIGHTNESS
-
+/* GEEKRGB config */
+#define GEEKRGB_USE_UNIVERSAL_BRIGHTNESS //no use OPENRGB_DIRECT_MODE_USE_UNIVERSAL_BRIGHTNESS
+#define GEEKRGB_WELCOME_ANIM_SPD 170

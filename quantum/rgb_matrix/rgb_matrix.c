@@ -86,15 +86,11 @@ __attribute__((weak)) RGB rgb_matrix_hsv_to_rgb(HSV hsv) {
 #endif
 
 #if !defined(RGB_MATRIX_STARTUP_MODE)
-#    ifdef OPENRGB_ENABLE
-#        define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_OPENRGB_DIRECT
+#    ifdef ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
+#        define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_CYCLE_LEFT_RIGHT
 #    else
-#   	 ifdef ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
-#     	   define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_CYCLE_LEFT_RIGHT
-#   	 else
 // fallback to solid colors if RGB_MATRIX_CYCLE_LEFT_RIGHT is disabled in userspace
-#     	   define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR
-#		endif
+#        define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR
 #    endif
 #endif
 

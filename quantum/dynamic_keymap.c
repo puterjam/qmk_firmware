@@ -24,7 +24,9 @@
 #    include "via.h" // for VIA_EEPROM_CONFIG_END
 #    define DYNAMIC_KEYMAP_EEPROM_START (VIA_EEPROM_CONFIG_END)
 #else
-#    define DYNAMIC_KEYMAP_EEPROM_START (EECONFIG_SIZE)
+#    ifndef DYNAMIC_KEYMAP_EEPROM_START
+#        define DYNAMIC_KEYMAP_EEPROM_START (EECONFIG_SIZE)
+#    endif
 #endif
 
 #ifdef ENCODER_ENABLE
@@ -135,10 +137,14 @@ uint16_t dynamic_keymap_get_encoder(uint8_t layer, uint8_t encoder_id, bool cloc
     // Big endian, so we can read/write EEPROM directly from host if we want
     uint16_t keycode = ((uint16_t)eeprom_read_byte(address + (clockwise ? 0 : 2))) << 8;
     keycode |= eeprom_read_byte(address + (clockwise ? 0 : 2) + 1);
+
+    dprintf("encoder keycode: %d\n",keycode);
     return keycode;
 }
 
 void dynamic_keymap_set_encoder(uint8_t layer, uint8_t encoder_id, bool clockwise, uint16_t keycode) {
+    dprintf("layer: %d, encoderid: %d, clockwise: %d , keycode: %d\n",layer,encoder_id,clockwise,keycode);
+
     if (layer >= DYNAMIC_KEYMAP_LAYER_COUNT || encoder_id >= NUM_ENCODERS) return;
     void *address = dynamic_keymap_encoder_to_eeprom_address(layer, encoder_id);
     // Big endian, so we can read/write EEPROM directly from host if we want
@@ -153,7 +159,7 @@ void dynamic_keymap_reset(void) {
         for (int row = 0; row < MATRIX_ROWS; row++) {
             for (int column = 0; column < MATRIX_COLS; column++) {
                 if (layer < keymap_layer_count()) {
-                    dynamic_keymap_set_keycode(layer, row, column, pgm_read_word(&keymaps[layer][row][column]));
+                    dynamic_keymap_set_keycode(layer, row, column, keycode_at_keymap_location_raw(layer, row, column));
                 } else {
                     dynamic_keymap_set_keycode(layer, row, column, KC_TRANSPARENT);
                 }
@@ -162,8 +168,8 @@ void dynamic_keymap_reset(void) {
 #ifdef ENCODER_MAP_ENABLE
         for (int encoder = 0; encoder < NUM_ENCODERS; encoder++) {
             if (layer < encodermap_layer_count()) {
-                dynamic_keymap_set_encoder(layer, encoder, true, pgm_read_word(&encoder_map[layer][encoder][0]));
-                dynamic_keymap_set_encoder(layer, encoder, false, pgm_read_word(&encoder_map[layer][encoder][1]));
+                dynamic_keymap_set_encoder(layer, encoder, true, keycode_at_encodermap_location_raw(layer, encoder, true));
+                dynamic_keymap_set_encoder(layer, encoder, false, keycode_at_encodermap_location_raw(layer, encoder, false));
             } else {
                 dynamic_keymap_set_encoder(layer, encoder, true, KC_TRANSPARENT);
                 dynamic_keymap_set_encoder(layer, encoder, false, KC_TRANSPARENT);
@@ -201,20 +207,21 @@ void dynamic_keymap_set_buffer(uint16_t offset, uint16_t size, uint8_t *data) {
     }
 }
 
-// This overrides the one in quantum/keymap_common.c
-uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key) {
-    if (layer < DYNAMIC_KEYMAP_LAYER_COUNT && key.row < MATRIX_ROWS && key.col < MATRIX_COLS) {
-        return dynamic_keymap_get_keycode(layer, key.row, key.col);
+uint16_t keycode_at_keymap_location(uint8_t layer_num, uint8_t row, uint8_t column) {
+    if (layer_num < DYNAMIC_KEYMAP_LAYER_COUNT && row < MATRIX_ROWS && column < MATRIX_COLS) {
+        return dynamic_keymap_get_keycode(layer_num, row, column);
     }
-#ifdef ENCODER_MAP_ENABLE
-    else if (layer < DYNAMIC_KEYMAP_LAYER_COUNT && key.row == KEYLOC_ENCODER_CW && key.col < NUM_ENCODERS) {
-        return dynamic_keymap_get_encoder(layer, key.col, true);
-    } else if (layer < DYNAMIC_KEYMAP_LAYER_COUNT && key.row == KEYLOC_ENCODER_CCW && key.col < NUM_ENCODERS) {
-        return dynamic_keymap_get_encoder(layer, key.col, false);
-    }
-#endif // ENCODER_MAP_ENABLE
     return KC_NO;
 }
+
+#ifdef ENCODER_MAP_ENABLE
+uint16_t keycode_at_encodermap_location(uint8_t layer_num, uint8_t encoder_idx, bool clockwise) {
+    if (layer_num < DYNAMIC_KEYMAP_LAYER_COUNT && encoder_idx < NUM_ENCODERS) {
+        return dynamic_keymap_get_encoder(layer_num, encoder_idx, clockwise);
+    }
+    return KC_NO;
+}
+#endif // ENCODER_MAP_ENABLE
 
 uint8_t dynamic_keymap_macro_get_count(void) {
     return DYNAMIC_KEYMAP_MACRO_COUNT;
