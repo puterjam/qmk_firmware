@@ -62,3 +62,6 @@
 
 /* Enable caps-lock LED */
 #define CAPS_LOCK_LED_INDEX 45
+
+/* Enable NKRO */
+#define FORCE_NKRO
