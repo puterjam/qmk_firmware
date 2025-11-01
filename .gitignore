@@ -54,6 +54,11 @@ build/
 cmake-build-debug
 CMakeLists.txt
 
+# Ignore .vscode files & clangd
+.vscode/.last_compile
+.vscode/.last_config
+.clangd
+
 # Let these ones be user specific, since we have so many different configurations
 *.code-workspace
 .stfolder
