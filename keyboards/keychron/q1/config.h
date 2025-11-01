@@ -87,6 +87,7 @@
 #define GEEKRGB_USE_UNIVERSAL_BRIGHTNESS
 #define GEEKRGB_WELCOME_ANIM_SPD 170
 #define OPENRGB_DEFAULT_KEYMAP_ID 2 //read windows keymap for openrgb
+#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_GEEKRGB // Set GEEKRGB as default lighting mode
 
 /* Enable receive custom command from host */
 #define RAW_HID_CMD 0xAB

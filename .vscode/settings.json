@@ -18,7 +18,33 @@
         "xstddef": "c",
         "type_traits": "c",
         "utility": "c",
-        "ranges": "c"
+        "ranges": "c",
+        "__locale": "c",
+        "ios": "c",
+        "variant": "c",
+        "system_error": "c",
+        "compare": "c",
+        "cstdint": "c",
+        "atomic": "c",
+        "charconv": "c",
+        "cmath": "c",
+        "concepts": "c",
+        "functional": "c",
+        "iterator": "c",
+        "memory_resource": "c",
+        "optional": "c",
+        "string_view": "c",
+        "algorithm": "c",
+        "random": "c",
+        "format": "c",
+        "limits": "c",
+        "numeric": "c",
+        "ostream": "c",
+        "span": "c",
+        "streambuf": "c",
+        "text_encoding": "c",
+        "tuple": "c",
+        "typeinfo": "c"
     },
     "[markdown]": {
         "editor.trimAutoWhitespace": false,
@@ -27,5 +53,28 @@
     "python.formatting.provider": "yapf",
     "[json]": {
 	    "editor.formatOnSave": false
-    }
+    },
+    // 禁用 C/C++ 扩展的 IntelliSense，使用 clangd 代替
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "C_Cpp.autocomplete": "disabled",
+    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.formatting": "disabled",
+
+    // clangd 配置
+    "clangd.path": "/usr/bin/clangd",
+    "clangd.arguments": [
+        "--background-index",
+        "--clang-tidy",
+        "--header-insertion=iwyu",
+        "--completion-style=detailed",
+        "--function-arg-placeholders",
+        "--fallback-style=LLVM",
+        "--all-scopes-completion",
+        "--log=error"
+    ],
+    "clangd.fallbackFlags": [
+        "-I${workspaceFolder}",
+        "-I${workspaceFolder}/quantum",
+        "-I${workspaceFolder}/tmk_core"
+    ]
 }

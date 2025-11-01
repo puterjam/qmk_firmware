@@ -1,12 +1,12 @@
 {
-    "keyboard_name": "Keychron Q1 Knob",
+    "keyboard_name": "Keychron Q1V2 ANSI Knob",
     "manufacturer": "Keychron",
     "url": "https://github.com/Keychron",
     "maintainer": "lalalademaxiya1",
     "usb": {
         "vid": "0x3434",
         "pid": "0x0107",
-        "device_version": "2.0.6"
+        "device_version": "2.1.0"
     },
     "layouts": {
         "LAYOUT_ansi_82": {
