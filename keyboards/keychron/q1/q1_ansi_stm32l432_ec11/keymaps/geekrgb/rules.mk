@@ -2,3 +2,7 @@ OPENRGB_ENABLE = yes
 SIGNALRGB_SUPPORT_ENABLE = yes
 VIA_ENABLE = yes
 ENCODER_MAP_ENABLE = yes
+
+VPATH += keyboards/keychron/common
+SRC += geekrgb_common.c
+SRC += keychron_factory_test_common.c

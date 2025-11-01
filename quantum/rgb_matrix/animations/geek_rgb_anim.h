@@ -16,28 +16,32 @@ static void set_openrgb_color(uint8_t led_index, uint8_t val){
         #else
     rgb_matrix_set_color(led_index, rgb.r, rgb.g, rgb.b);
 #   endif
-
-
-
 }
 
 bool GEEKRGB(effect_params_t* params){
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
 
     void set_openrgb_colors(effect_params_t * params) {
-        uint8_t time   = scale16by8(g_geekrgb_timer, GEEKRGB_WELCOME_ANIM_SPD); //FIXED SPEED
+        uint16_t time   = scale16by8(g_geekrgb_timer, GEEKRGB_WELCOME_ANIM_SPD); //FIXED SPEED
         HSV hsv        = rgb_matrix_config.hsv;
-        g_geekrgb_anim_playing = (time != UINT8_MAX);
+        g_geekrgb_anim_playing = (time < UINT8_MAX * 2);
 
         for (uint8_t i = led_min; i < led_max; i++) {
             RGB_MATRIX_TEST_LED_FLAGS();
             if (g_geekrgb_anim_playing) { //play loop loading animation
                 int16_t dx   = g_led_config.point[i].x - k_rgb_matrix_center.x;
                 int16_t dy   = g_led_config.point[i].y - k_rgb_matrix_center.y;
+                uint16_t dist = sqrt16(dx * dx + dy * dy);
                 hsv.v = 0;
 
-                int16_t effect = time - sqrt16(dx * dx + dy * dy);
+                int16_t effect = time - 3 * dist / 2;
+
                 if (effect < 0) effect = 0;
+                if (effect > 255) effect = 255;
+
+                // if(g_led_config.point[i].x == 0 && g_led_config.point[i].y == 0){
+                //     dprintf("time:%d + effect: %d\n", time, effect);
+                // }
 
                 hsv.v = qadd8(hsv.v, effect);
                 hsv.v = scale8(hsv.v, rgb_matrix_config.hsv.v);
