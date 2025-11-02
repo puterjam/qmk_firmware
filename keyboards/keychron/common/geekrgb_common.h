@@ -57,6 +57,7 @@ typedef struct PACKED {
     uint8_t keycode[3];
 } key_combination_t;
 
+void geekrgb_init_wakeup_anim(void);
 void housekeeping_task_geekrgb(void);
 bool process_record_geekrgb(uint16_t keycode, keyrecord_t *record);
 

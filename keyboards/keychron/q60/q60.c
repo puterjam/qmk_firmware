@@ -26,6 +26,7 @@ const matrix_row_t matrix_mask[] = {
 
 #ifdef DIP_SWITCH_ENABLE
 
+// DIP switch update
 bool dip_switch_update_kb(uint8_t index, bool active) {
     if (!dip_switch_update_user(index, active)) { return false;}
     if (index == 0) {

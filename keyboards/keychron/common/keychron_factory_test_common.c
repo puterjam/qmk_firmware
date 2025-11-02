@@ -20,6 +20,10 @@
 #include "via.h"
 #include "raw_hid.h"
 
+#ifndef RAW_EPSIZE
+#    define RAW_EPSIZE 32
+#endif
+
 #define KEY_PRESS_FN     (0x1<<0)
 #define KEY_PRESS_STEP_1 (0x1<<1)
 #define KEY_PRESS_STEP_2 (0x1<<2)
@@ -468,6 +472,7 @@ void housekeeping_task_ft(void) {
     }
 }
 
+#ifdef RAW_ENABLE
 static void system_switch_state_report(uint8_t index, bool active) {
     uint16_t checksum = 0;
     uint8_t data[RAW_EPSIZE] = {0};
@@ -492,7 +497,6 @@ static void system_switch_state_report(uint8_t index, bool active) {
     }
 }
 
-#ifdef RAW_ENABLE
 bool dip_switch_update_ft(uint8_t index, bool active) {
     /* Send default layer state to host */
     system_switch_state_report(index, active);

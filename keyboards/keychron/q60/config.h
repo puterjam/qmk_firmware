@@ -114,5 +114,18 @@
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #define RGB_MATRIX_KEYPRESSES
 
+#ifdef RGB_MATRIX_ENABLE
+#    define RGB_DISABLE_WHEN_USB_SUSPENDED // Disable RGB lighting when PC is in suspend
+#    undef RGB_DISABLE_TIMEOUT
+#    define RGB_DISABLE_TIMEOUT 900000 // 15 minutes (15 * 60 * 1000ms)
+#endif
+
+/* GEEKRGB config */
+#define GEEKRGB_USE_UNIVERSAL_BRIGHTNESS
+#define GEEKRGB_WELCOME_ANIM_SPD 170
+#define OPENRGB_DEFAULT_KEYMAP_ID 2 //read windows keymap for openrgb
+#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE // Set GEEKRGB as default lighting mode
+#define RGB_MATRIX_STARTUP_HUE 128 // Set startup color to cyan
+
 /* Enable receive custom command from host */
 #define RAW_HID_CMD 0xAB
